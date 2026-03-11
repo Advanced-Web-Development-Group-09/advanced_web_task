@@ -1,1 +1,24 @@
-<p>login works!</p>
+<div class="flex">
+    <img class="h-screen" src="DB-Background.png" alt="DB Image">
+    <div class="flex items-center justify-center flex-1 w-fit">
+        <div class="flex flex-col gap-4">
+            <p class="text-[#1D1B20] text-4xl font-medium">Login</p>
+            <p class="text-[#1D1B20]">All this fields are required</p>
+            <form class="flex flex-col gap-4">
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </form>
+
+            <button mat-raised-button class="w-25">Login</button>
+            <p>
+                Don't have an Account? <a href="/registration" class="font-medium">Sign up now!</a>
+            </p>
+        </div>    
+    </div>
+</div>
