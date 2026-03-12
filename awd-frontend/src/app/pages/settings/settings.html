@@ -3,6 +3,57 @@
     <app-sidenav></app-sidenav>
   </mat-drawer>
   <mat-drawer-content>
-    Test
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <mat-form-field>
+          <mat-label>Old Password</mat-label>
+          <input matInput>
+        </mat-form-field>
+          <mat-form-field>
+            <mat-label>New Password</mat-label>
+            <input
+              matInput
+              [formControl]="newPassword1"
+              (blur)="updateErrorMessage1()"
+              required
+            />
+            @if (newPassword1.invalid) {
+              <mat-error>{{errorMessage1()}}</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>New Password</mat-label>
+            <input
+              matInput
+              [formControl]="newPassword2"
+              (blur)="updateErrorMessage2()"
+              required
+            />
+            @if (newPassword2.invalid) {
+              <mat-error>{{errorMessage2()}}</mat-error>
+            }
+          </mat-form-field>
+          <a matFab extended href="/login">
+            <mat-icon>password</mat-icon>
+            Change Password
+          </a>
+        </div>
+     </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col items-center">
+            <p class="font-medium text-red-500 w-fit">Delete my account</p>
+            <p>Permanently delete the account</p>
+          </div>
+          <a matFab extended href="/login">
+            <mat-icon>delete</mat-icon>
+            Delete Account
+          </a>
+        </div>
+     </mat-card-content>
+    </mat-card>
   </mat-drawer-content>
 </mat-drawer-container>
