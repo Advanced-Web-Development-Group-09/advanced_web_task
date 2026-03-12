@@ -11,10 +11,11 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {Sidenav} from '../../shared/sidenav/sidenav';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatSidenavModule, MatIconModule, MatButtonModule, MatCardModule, MatTableModule, MatInputModule, MatFormFieldModule, FormsModule, MatDatepickerModule, MatPaginatorModule, MatCheckboxModule],
+  imports: [MatSidenavModule, MatIconModule, MatButtonModule, MatCardModule, MatTableModule, MatInputModule, MatFormFieldModule, FormsModule, MatDatepickerModule, MatPaginatorModule, MatCheckboxModule, Sidenav],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
