@@ -1,27 +1,27 @@
-.mat-drawer, .mat-drawer-inner-container {
-    width: fit-content;
-    background-color: #F1F4F9;
+.mat-drawer,
+.mat-drawer-inner-container {
+  width: fit-content;
+  background-color: #f1f4f9;
 }
 
 .mat-drawer-content {
-    display: flex;
-    justify-content: center;
-    padding: 4rem;
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
 }
 
 .mat-mdc-card {
-    background-color: #F1F4F9;
+  background-color: #f1f4f9;
+  width: 100%;
 }
 
 .mat-mdc-paginator {
-    background-color: #F1F4F9;
+  background-color: #f1f4f9;
 }
-
-
 
 table {
   width: 100%;
-  background-color: #F1F4F9;
+  background-color: #f1f4f9;
 }
 
 tr.example-detail-row {

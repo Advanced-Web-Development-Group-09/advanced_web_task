@@ -1,138 +1,143 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {Sidenav} from '../../shared/sidenav/sidenav';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Sidenav } from '../../shared/sidenav/sidenav';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+
+export interface TrainElement {
+  id: string;
+  station: string;
+  plannedDeparture: string;
+}
+
+const TRAIN_DATA: TrainElement[] = [
+  {
+    id: '1573967790757085557-2407072312-14',
+    station: 'Aachen Hbf',
+    plannedDeparture: '2024-07-08 00:01:00',
+  },
+  {
+    id: '349781417030375472-2407080017-1',
+    station: 'Aachen Hbf',
+    plannedDeparture: '2024-07-08 00:17:00',
+  },
+  {
+    id: '7157250219775883918-2407072120-25',
+    station: 'Aachen-Rothe Erde',
+    plannedDeparture: '2024-07-08 00:04:00',
+  },
+  {
+    id: '349781417030375472-2407080017-2',
+    station: 'Aachen West',
+    plannedDeparture: '2024-07-08 00:21:00',
+  },
+  {
+    id: '1983158592123451570-2407080010-3',
+    station: 'Aachen West',
+    plannedDeparture: '2024-07-08 00:21:00',
+  },
+  {
+    id: '-5293934437045765939-2407080023-2',
+    station: 'Aachen West',
+    plannedDeparture: '2024-07-08 00:31:00',
+  },
+  {
+    id: '6845762881043426854-2407072357-6',
+    station: 'Aachen West',
+    plannedDeparture: '2024-07-08 00:58:00',
+  },
+  {
+    id: '-2100556839975301087-2407072307-13',
+    station: 'Aachen West',
+    plannedDeparture: '2024-07-08 00:41:00',
+  },
+  {
+    id: '-7696913984968518161-2407080037-1',
+    station: 'Aalen Hbf',
+    plannedDeparture: '2024-07-08 00:37:00',
+  },
+  {
+    id: '-6027587483204218492-2407080013-4',
+    station: 'Achim',
+    plannedDeparture: '2024-07-08 00:27:00',
+  },
+  {
+    id: '-7723223610149163054-2407072310-9',
+    station: 'Ahlen (Han)',
+    plannedDeparture: '2024-07-08 00:16:00',
+  },
+  {
+    id: '5729393359484274537-2407080007-8',
+    station: 'Ahlen (Han)',
+    plannedDeparture: '2024-07-08 00:39:00',
+  },
+  {
+    id: '1640260421649276864-2407080004-5',
+    station: 'Ahlen (Han)',
+    plannedDeparture: '2024-07-08 00:16:00',
+  },
+  {
+    id: '8352762151701721590-2407080034-5',
+    station: 'Ahlen (Han)',
+    plannedDeparture: '2024-07-08 00:46:00',
+  },
+  {
+    id: '-1113872591615872448-2407072343-6',
+    station: 'Ahlen (Han)',
+    plannedDeparture: '2024-07-08 00:11:00',
+  },
+];
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatSidenavModule, MatIconModule, MatButtonModule, MatCardModule, MatTableModule, MatInputModule, MatFormFieldModule, FormsModule, MatDatepickerModule, MatPaginatorModule, MatCheckboxModule, Sidenav],
+  imports: [
+    MatSidenavModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
+    Sidenav,
+    MatSortModule,
+  ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard {
-  dataSource = ELEMENT_DATA;
-    columnsToDisplay = ['select', 'name', 'weight', 'symbol', 'position'];
-    columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
-    expandedElement: PeriodicElement | null = null;
+export class Dashboard implements AfterViewInit {
+  displayedColumns: string[] = ['id', 'station', 'plannedDeparture'];
+  dataSource = new MatTableDataSource(TRAIN_DATA);
 
-    /** Checks whether an element is expanded. */
-    isExpanded(element: PeriodicElement) {
-      return this.expandedElement === element;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
-
-    /** Toggles the expanded state of an element. */
-    toggle(element: PeriodicElement) {
-      this.expandedElement = this.isExpanded(element) ? null : element;
-    }
+  }
 }
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-  description: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    position: 1,
-    name: 'Hydrogen',
-    weight: 1.0079,
-    symbol: 'H',
-    description: `Hydrogen is a chemical element with symbol H and atomic number 1. With a standard
-        atomic weight of 1.008, hydrogen is the lightest element on the periodic table.`,
-  },
-  {
-    position: 2,
-    name: 'Helium',
-    weight: 4.0026,
-    symbol: 'He',
-    description: `Helium is a chemical element with symbol He and atomic number 2. It is a
-        colorless, odorless, tasteless, non-toxic, inert, monatomic gas, the first in the noble gas
-        group in the periodic table. Its boiling point is the lowest among all the elements.`,
-  },
-  {
-    position: 3,
-    name: 'Lithium',
-    weight: 6.941,
-    symbol: 'Li',
-    description: `Lithium is a chemical element with symbol Li and atomic number 3. It is a soft,
-        silvery-white alkali metal. Under standard conditions, it is the lightest metal and the
-        lightest solid element.`,
-  },
-  {
-    position: 4,
-    name: 'Beryllium',
-    weight: 9.0122,
-    symbol: 'Be',
-    description: `Beryllium is a chemical element with symbol Be and atomic number 4. It is a
-        relatively rare element in the universe, usually occurring as a product of the spallation of
-        larger atomic nuclei that have collided with cosmic rays.`,
-  },
-  {
-    position: 5,
-    name: 'Boron',
-    weight: 10.811,
-    symbol: 'B',
-    description: `Boron is a chemical element with symbol B and atomic number 5. Produced entirely
-        by cosmic ray spallation and supernovae and not by stellar nucleosynthesis, it is a
-        low-abundance element in the Solar system and in the Earth's crust.`,
-  },
-  {
-    position: 6,
-    name: 'Carbon',
-    weight: 12.0107,
-    symbol: 'C',
-    description: `Carbon is a chemical element with symbol C and atomic number 6. It is nonmetallic
-        and tetravalent—making four electrons available to form covalent chemical bonds. It belongs
-        to group 14 of the periodic table.`,
-  },
-  {
-    position: 7,
-    name: 'Nitrogen',
-    weight: 14.0067,
-    symbol: 'N',
-    description: `Nitrogen is a chemical element with symbol N and atomic number 7. It was first
-        discovered and isolated by Scottish physician Daniel Rutherford in 1772.`,
-  },
-  {
-    position: 8,
-    name: 'Oxygen',
-    weight: 15.9994,
-    symbol: 'O',
-    description: `Oxygen is a chemical element with symbol O and atomic number 8. It is a member of
-         the chalcogen group on the periodic table, a highly reactive nonmetal, and an oxidizing
-         agent that readily forms oxides with most elements as well as with other compounds.`,
-  },
-  {
-    position: 9,
-    name: 'Fluorine',
-    weight: 18.9984,
-    symbol: 'F',
-    description: `Fluorine is a chemical element with symbol F and atomic number 9. It is the
-        lightest halogen and exists as a highly toxic pale yellow diatomic gas at standard
-        conditions.`,
-  },
-  {
-    position: 10,
-    name: 'Neon',
-    weight: 20.1797,
-    symbol: 'Ne',
-    description: `Neon is a chemical element with symbol Ne and atomic number 10. It is a noble gas.
-        Neon is a colorless, odorless, inert monatomic gas under standard conditions, with about
-        two-thirds the density of air.`,
-  },
-];
