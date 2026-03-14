@@ -38,4 +38,50 @@ export class Datasets {
   displayedColumns: string[] = ['name', 'size', 'date', 'button'];
   dataSourceUploaded = UPLOADED_DATA;
   dataSourceExported = EXPORTED_DATA;
+
+  isDragging = false;
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent) {
+  event.preventDefault();
+  this.isDragging = false;
+
+  if (event.dataTransfer?.files.length) {
+      const file = event.dataTransfer.files[0];
+      if (!file.name.endsWith('.csv') && !file.name.endsWith('.xlsx') && !file.name.endsWith('.json')) {
+        alert('Only CSV, XLSX, and JSON files allowed');
+        return;
+      }
+      this.handleFile(file);
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (!file.name.endsWith('.csv') && !file.name.endsWith('.xlsx') && !file.name.endsWith('.json')) {
+        alert('Only CSV, XLSX, and JSON files allowed');
+        return;
+      }
+      this.handleFile(file);
+    }
+  }
+
+  handleFile(file: File) {
+    alert(`File "${file.name}" selected for upload`);
+    console.log('Uploaded file:', file);
+
+    // Example: upload to backend later
+  }
 }
