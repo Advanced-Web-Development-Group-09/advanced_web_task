@@ -1,4 +1,4 @@
-<mat-drawer-container class="h-screen" autosize>
+<mat-drawer-container autosize>
   <mat-drawer mode="side" opened>
     <app-sidenav></app-sidenav>
   </mat-drawer>
@@ -64,6 +64,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
+        <mat-paginator #uploadedPaginator [pageSizeOptions]="[5, 10, 20]"> </mat-paginator>
       </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined">
@@ -99,6 +100,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
+        <mat-paginator #exportedPaginator [pageSizeOptions]="[5, 10, 20]"> </mat-paginator>
       </mat-card-content>
     </mat-card>
   </mat-drawer-content>
