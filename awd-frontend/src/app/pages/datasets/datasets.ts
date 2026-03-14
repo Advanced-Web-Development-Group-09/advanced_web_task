@@ -123,8 +123,6 @@ export class Datasets implements AfterViewInit {
   }
 
   handleFile(file: File) {
-    console.log('Uploaded file:', file);
-
     this.uploadedFiles.push(file);
     // Example: upload to backend later
   }
