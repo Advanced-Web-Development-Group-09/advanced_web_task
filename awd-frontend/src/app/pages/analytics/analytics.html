@@ -7,17 +7,23 @@
       <mat-card-title>Train Cancellation Odds</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col items-center gap-4">
-          <form class="example-form">
-            <mat-form-field class="example-full-width">
+          <form>
+            <mat-form-field>
               <mat-label>Start Station</mat-label>
-              <input
-                type="text"
-                matInput
-                [formControl]="myControl"
-                [matAutocomplete]="auto"
-              />
+              <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions | async; track option) {
+                  <mat-option [value]="option">{{ option }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+          <form>
+            <mat-form-field>
+              <mat-label>End Station</mat-label>
+              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" />
+              <mat-autocomplete #auto="matAutocomplete">
+                @for (option of filteredOptions2 | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
                 }
               </mat-autocomplete>
@@ -45,6 +51,22 @@
       <mat-card-title>Average State Delay</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col items-center gap-4">
+          <form>
+            <mat-form-field>
+              <mat-label>State</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="myControl3"
+                [matAutocomplete]="autoState"
+              />
+              <mat-autocomplete #autoState="matAutocomplete">
+                @for (state of filteredOptions3 | async; track state) {
+                  <mat-option [value]="state">{{ state }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
           <button matFab extended>
             <mat-icon>calculate</mat-icon>
             Start Calculation

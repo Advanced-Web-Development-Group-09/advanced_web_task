@@ -33,19 +33,42 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class Analytics {
   myControl = new FormControl('');
+  myControl2 = new FormControl('');
+  myControl3 = new FormControl('');
   options: string[] = ['Hildesheim Hbf', 'Hannover Hbf', 'Braunschweig Hbf', 'Göttingen Hbf'];
+  optionsStates: string[] = [
+    'Bayern',
+    'Sachsen',
+    'Nordrhein-Westfalen',
+    'Baden-Württemberg',
+    'Hessen',
+  ];
   filteredOptions: Observable<string[]>;
+  filteredOptions2: Observable<string[]>;
+  filteredOptions3: Observable<string[]>;
 
   constructor() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value || '')),
     );
+    this.filteredOptions2 = this.myControl2.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || '')),
+    );
+    this.filteredOptions3 = this.myControl3.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterStates(value || '')),
+    );
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.options.filter((option) => option.toLowerCase().includes(filterValue));
+  }
+
+  private _filterStates(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.optionsStates.filter((state) => state.toLowerCase().includes(filterValue));
   }
 }
