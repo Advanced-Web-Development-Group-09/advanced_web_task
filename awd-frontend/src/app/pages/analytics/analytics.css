@@ -1,10 +1,18 @@
-.mat-drawer, .mat-drawer-inner-container {
-    width: fit-content;
-    background-color: #F1F4F9;
+.mat-drawer,
+.mat-drawer-inner-container {
+  width: fit-content;
+  background-color: #f1f4f9;
 }
 
 .mat-drawer-content {
-    display: flex;
-    justify-content: center;
-    padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem;
+  gap: 1rem;
+}
+
+.mat-mdc-card-title {
+  margin-top: 1rem;
+  margin-left: 1rem;
 }

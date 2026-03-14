@@ -3,6 +3,54 @@
     <app-sidenav></app-sidenav>
   </mat-drawer>
   <mat-drawer-content>
-    Test
+    <mat-card appearance="outlined">
+      <mat-card-title>Train Cancellation Odds</mat-card-title>
+      <mat-card-content>
+        <div class="flex flex-col items-center gap-4">
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <mat-label>Start Station</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                @for (option of filteredOptions | async; track option) {
+                  <mat-option [value]="option">{{ option }}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+          <button matFab extended>
+            <mat-icon>calculate</mat-icon>
+            Start Calculation
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined">
+      <mat-card-title>Delay Statistics</mat-card-title>
+      <mat-card-content>
+        <div class="flex flex-col items-center">
+          <button matFab extended>
+            <mat-icon>calculate</mat-icon>
+            Start Calculation
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined">
+      <mat-card-title>Average State Delay</mat-card-title>
+      <mat-card-content>
+        <div class="flex flex-col items-center gap-4">
+          <button matFab extended>
+            <mat-icon>calculate</mat-icon>
+            Start Calculation
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </mat-drawer-content>
 </mat-drawer-container>
