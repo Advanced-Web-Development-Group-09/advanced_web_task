@@ -171,4 +171,19 @@ export class Dashboard implements AfterViewInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
+
+  // Expanded row details
+
+  columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
+  expandedElement: TrainElement | null = null;
+
+  /** Checks whether an element is expanded. */
+  isExpanded(element: TrainElement) {
+    return this.expandedElement === element;
+  }
+
+  /** Toggles the expanded state of an element. */
+  toggle(element: TrainElement) {
+    this.expandedElement = this.isExpanded(element) ? null : element;
+  }
 }
