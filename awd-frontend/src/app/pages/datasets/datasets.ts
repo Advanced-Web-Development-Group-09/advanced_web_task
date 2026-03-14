@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -49,9 +50,11 @@ const EXPORTED_DATA: DatasetElement[] = [
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    CommonModule,
   ],
   templateUrl: './datasets.html',
   styleUrl: './datasets.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Datasets implements AfterViewInit {
   // Table Logic
@@ -72,6 +75,7 @@ export class Datasets implements AfterViewInit {
 
   // Drag and Drop Logic
   isDragging = false;
+  uploadedFiles: File[] = [];
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -119,9 +123,9 @@ export class Datasets implements AfterViewInit {
   }
 
   handleFile(file: File) {
-    alert(`File "${file.name}" selected for upload`);
     console.log('Uploaded file:', file);
 
+    this.uploadedFiles.push(file);
     // Example: upload to backend later
   }
 }

@@ -6,27 +6,49 @@
     <mat-card appearance="outlined">
       <mat-card-title>Dataset Upload</mat-card-title>
       <mat-card-content>
-        <div class="upload-area">
-          <p>Drag and drop your dataset here, or click to select a file.</p>
-          <div
-            class="upload-dropzone"
-            [class.drag-active]="isDragging"
-            (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)"
-            (drop)="onDrop($event)"
-            (click)="fileInput.click()"
-          >
+        <div class="flex flex-col gap-4">
+          <div class="upload-area">
             <p>Drag and drop your dataset here, or click to select a file.</p>
+            <div
+              class="upload-dropzone"
+              [class.drag-active]="isDragging"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()"
+            >
+              <p>Drag and drop your dataset here, or click to select a file.</p>
 
-            <button mat-raised-button color="primary">Select File</button>
-
-            <input
-              #fileInput
-              type="file"
-              hidden
-              (change)="onFileSelected($event)"
-              accept=".csv,.json,.xlsx"
-            />
+              <button mat-raised-button color="primary">Select File</button>
+              <input
+                #fileInput
+                type="file"
+                hidden
+                (change)="onFileSelected($event)"
+                accept=".csv,.json,.xlsx"
+              />
+            </div>
+          </div>
+          <div *ngFor="let file of uploadedFiles" class="flex flex-col gap-2">
+            <div
+              class="flex flex-row gap-2 w-full border border-gray-400 rounded-lg py-2 px-6 items-center justify-between"
+            >
+              <div class="flex flex-row gap-2 items-center">
+                <mat-icon fontIcon="upload_file"></mat-icon>
+                <div class="flex flex-col gap-0.5">
+                  <p class="font-medium">{{ file.name }}</p>
+                  <p>{{ file.size | number }} bytes</p>
+                </div>
+              </div>
+              <div class="flex flex-row gap-4">
+                <button matMiniFab>
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button matMiniFab>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </mat-card-content>
