@@ -5,6 +5,12 @@
 
 .mat-drawer-content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    gap: 1rem;
     padding: 4rem;
+}
+
+table {
+  width: 100%;
 }
