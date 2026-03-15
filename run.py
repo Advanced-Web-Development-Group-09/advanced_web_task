@@ -11,22 +11,19 @@ def main():
     """
     This script automates the startup of the backend and frontend servers.
     """
-    backend_dir = "backend"
-    frontend_dir = "awd-frontend"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.join(script_dir, "backend")
+    frontend_dir = os.path.join(script_dir, "awd-frontend")
 
     # --- Backend Setup ---
     backend_venv = os.path.join(backend_dir, ".venv")
     if not os.path.isdir(backend_venv):
         print_instructions(
-            "Backend virtual environment not found.
-"
-            "Please run the following commands in the 'backend' directory:
-"
-            "1. python -m venv .venv
-"
-            "2. source .venv/bin/activate (or .venv\Scripts\activate on Windows)
-"
-            "3. pip install -r requirements.txt"
+            """Backend virtual environment not found.
+Please run the following commands in the 'backend' directory:
+1. python -m venv .venv
+2. source .venv/bin/activate (or .venv\\Scripts\\activate on Windows)
+3. pip install -r requirements.txt"""
         )
         return
 
@@ -34,9 +31,8 @@ def main():
     frontend_node_modules = os.path.join(frontend_dir, "node_modules")
     if not os.path.isdir(frontend_node_modules):
         print_instructions(
-            "Frontend dependencies not found.
-"
-            "Please run 'npm install' in the 'awd-frontend' directory."
+            """Frontend dependencies not found.
+Please run 'npm install' in the 'awd-frontend' directory."""
         )
         return
 
@@ -67,22 +63,19 @@ def main():
 
 
     print_instructions(
-        "Backend and frontend servers are starting.
-"
-        "Backend will be at http://127.0.0.1:8000
-"
-        "Frontend will be at http://localhost:4200/
+        """Backend and frontend servers are starting.
+Backend will be at http://127.0.0.1:8000
+Frontend will be at http://localhost:4200/
 
-"
-        "To stop the servers, press Ctrl+C in this terminal."
+To stop the servers, press Ctrl+C in this terminal."""
     )
 
     try:
         backend_process.wait()
         frontend_process.wait()
     except KeyboardInterrupt:
-        print("
-Shutting down servers...")
+        print("""
+Shutting down servers...""")
         backend_process.terminate()
         frontend_process.terminate()
         print("Servers shut down.")
