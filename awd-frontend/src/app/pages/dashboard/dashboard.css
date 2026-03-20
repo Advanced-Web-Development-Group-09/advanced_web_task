@@ -1,7 +1,6 @@
 .mat-drawer,
 .mat-drawer-inner-container {
   width: fit-content;
-  background-color: #f1f4f9;
 }
 
 .mat-drawer-content {
@@ -11,18 +10,12 @@
 }
 
 .mat-mdc-card {
-  background-color: #f1f4f9;
   width: 100%;
-  height: fi;
-}
-
-.mat-mdc-paginator {
-  background-color: #f1f4f9;
+  height: fit-content;
 }
 
 table {
   width: 100%;
-  background-color: #f1f4f9;
 }
 
 tr.example-detail-row {
