@@ -1,31 +1,66 @@
 <div class="flex flex-col gap-4 px-4 py-6 w-fit h-full justify-between">
   <div class="flex flex-col gap-4 font-medium text-sm">
     <p>Deutsche Bahn Traveller</p>
-    <a matButton href="/dashboard">
+    <a
+      matButton
+      routerLink="/dashboard"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>dashboard</mat-icon>
       Dashboard
     </a>
-    <a matButton href="/analytics">
+    <a
+      matButton
+      routerLink="/analytics"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>analytics</mat-icon>
       Analytics
     </a>
-    <a matButton href="/datasets">
+    <a
+      matButton
+      routerLink="/datasets"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>dataset</mat-icon>
       Datasets
     </a>
-    <a matButton href="/leaderboard">
+    <a
+      matButton
+      routerLink="/leaderboard"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>leaderboard</mat-icon>
       Leaderboard
     </a>
-    <a matButton href="/profile">
+    <a
+      matButton
+      routerLink="/profile"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>account_circle</mat-icon>
       Profile
     </a>
-    <a matButton href="/settings">
+    <a
+      matButton
+      routerLink="/settings"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>settings</mat-icon>
       Settings
     </a>
-    <a matButton href="/login">
+    <a
+      matButton
+      routerLink="/login"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon>logout</mat-icon>
       Logout
     </a>
