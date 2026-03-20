@@ -1,7 +1,12 @@
 .mdc-button {
   justify-content: flex-start;
+  height: 48px;
 }
 
 a.mdc-button.active-link {
   background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.mat-mdc-button > .mat-icon {
+  font-size: 20px;
 }

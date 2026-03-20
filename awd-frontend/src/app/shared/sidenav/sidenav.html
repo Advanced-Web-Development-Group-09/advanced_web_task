@@ -1,6 +1,12 @@
 <div class="flex flex-col gap-4 px-4 py-6 w-fit h-full justify-between">
-  <div class="flex flex-col gap-4 font-medium text-sm">
-    <p>Deutsche Bahn Traveller</p>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2 items-center">
+      <img src="Uni-Logo-transparent.png" alt="Uni Logo" class="w-22 h-22" />
+      <div class="flex flex-col items-center font-medium text-sm">
+        <p>Deutsche Bahn</p>
+        <p>Traveller</p>
+      </div>
+    </div>
     <a
       matButton
       routerLink="/dashboard"
@@ -67,10 +73,10 @@
   </div>
   <div class="flex flex-row gap-1 justify-evenly">
     <button matMiniFab>
-      <mat-icon>dark_mode</mat-icon>
+      <mat-icon>language</mat-icon>
     </button>
     <button matMiniFab>
-      <mat-icon>language</mat-icon>
+      <mat-icon>dark_mode</mat-icon>
     </button>
   </div>
 </div>
