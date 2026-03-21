@@ -2,8 +2,8 @@
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
   <div class="flex items-center justify-center flex-1 w-fit">
     <div class="flex flex-col gap-4">
-      <p class="text-[#1D1B20] text-4xl font-medium">Sign Up</p>
-      <p class="text-[#1D1B20]">All this fields are required</p>
+      <p class="text-4xl font-medium" style="color: var(--mat-sys-on-surface)">Sign Up</p>
+      <p style="color: var(--mat-sys-on-surface)">All this fields are required</p>
       <form class="flex flex-col gap-4">
         <mat-form-field>
           <mat-label>Username</mat-label>
@@ -15,12 +15,14 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Password</mat-label>
-          <input matInput />
+          <input matInput type="password" />
         </mat-form-field>
       </form>
 
-      <a matButton="filled" class="w-25 button-color" routerLink="/dashboard">Login</a>
-      <p>Already have an Account? <a routerLink="/login" class="font-medium">Log in now!</a></p>
+      <a matButton="filled" class="w-25" routerLink="/dashboard">Sign Up</a>
+      <p style="color: var(--mat-sys-on-surface)">
+        Already have an Account? <a routerLink="/login" class="font-medium">Log in now!</a>
+      </p>
     </div>
   </div>
 </div>
