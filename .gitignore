@@ -5,3 +5,4 @@ backend/sql_app.db
 backend/.venv/
 */__pycache__/
 *.pyc
+MyDB.session.sql
