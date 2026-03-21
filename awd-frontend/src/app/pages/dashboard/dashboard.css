@@ -14,6 +14,16 @@
   height: fit-content;
 }
 
+.mat-mdc-extended-fab,
+.mat-mdc-fab {
+  height: 3rem;
+  border-radius: 22px;
+}
+
+.mat-mdc-form-field-flex {
+  gap: 12px;
+}
+
 table {
   width: 100%;
 }
