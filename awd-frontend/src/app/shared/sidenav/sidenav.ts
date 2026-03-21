@@ -10,7 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidenav.css',
 })
 export class Sidenav {
-  isDarkMode = 'light';
+  isDarkMode = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
 
   toggleDarkMode() {
     this.isDarkMode = this.isDarkMode === 'light' ? 'dark' : 'light';
