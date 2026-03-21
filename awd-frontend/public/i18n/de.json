@@ -1,6 +1,6 @@
 {
   "DASHBOARD": "Dashboard",
-  "ANALYTICS": "Analytiks",
+  "ANALYTICS": "Analytik",
   "DATASETS": "Datensätze",
   "LEADERBOARD": "Rangliste",
   "PROFILE": "Profil",
@@ -47,6 +47,7 @@
   "USERNAME": "Benutzername",
   "LOGIN_INFO": "Jetzt anmelden!",
   "ALREADY_HAVE_ACCOUNT": "Sie haben bereits ein Konto?",
+  "STATUSPOINTS": "Statuspunkte",
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
     "ITEMS_PER_PAGE": "Elemente pro Seite",
