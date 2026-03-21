@@ -12,5 +12,14 @@
   "START_CALCULATION": "Berechnung starten",
   "DELAY_STATISTICS": "Verspätungsstatistiken",
   "AVERAGE_STATE_DELAY": "Durchschnittliche Verspätung nach Bundesland",
-  "STATE": "Bundesland"
+  "STATE": "Bundesland",
+  "SEARCH": "Suchen",
+  "EXPORT": "Exportieren",
+  "SELECT_ALL": "Alles auswählen",
+  "SELECT_ROWS": "Zeilen auswählen",
+  "EXPAND_ROWS": "Zeilen erweitern",
+  "ID": "ID",
+  "STATION": "Station",
+  "PLANNED_DEPARTURE": "Geplante Abfahrt",
+  "NO_DATA_FOUND": "Keine Daten gefunden, die dem Filter \"{{ searchValue }}\" entsprechen."
 }

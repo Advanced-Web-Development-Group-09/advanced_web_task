@@ -14,6 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface TrainElement {
   id: string;
@@ -115,6 +116,7 @@ const TRAIN_DATA: TrainElement[] = [
     MatCheckboxModule,
     Sidenav,
     MatSortModule,
+    TranslatePipe,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dashboard.html',

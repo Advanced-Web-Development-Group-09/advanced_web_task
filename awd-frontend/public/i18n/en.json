@@ -12,5 +12,14 @@
   "START_CALCULATION": "Start Calculation",
   "DELAY_STATISTICS": "Delay Statistics",
   "AVERAGE_STATE_DELAY": "Average State Delay",
-  "STATE": "State"
+  "STATE": "State",
+  "SEARCH": "Search",
+  "EXPORT": "Export",
+  "SELECT_ALL": "Select All",
+  "SELECT_ROWS": "Select Rows",
+  "EXPAND_ROWS": "Expand Rows",
+  "ID": "ID",
+  "STATION": "Station",
+  "PLANNED_DEPARTURE": "Planned Departure",
+  "NO_DATA_FOUND": "No data matching the filter \"{{ searchValue }}\" was found."
 }
