@@ -28,4 +28,12 @@
       </p>
     </div>
   </div>
+  <div class="absolute top-4 right-4 flex flex-row gap-2">
+    <button matMiniFab (click)="toggleLanguage()">
+      <mat-icon>language</mat-icon>
+    </button>
+    <button matMiniFab (click)="toggleDarkMode()">
+      <mat-icon>{{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    </button>
+  </div>
 </div>
