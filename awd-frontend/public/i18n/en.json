@@ -54,6 +54,14 @@
   "DELETE_ACCOUNT_TITLE": "Delete my Account",
   "DELETE_ACCOUNT_DESC": "Permanently delete the account",
   "DELETE_ACCOUNT": "Delete Account",
+  "Close": "Close",
+  "DIALOG": {
+    "INVALID_FILE_TYPE": "Invalid file type",
+    "FILE_CANNOT_BE_PROCESSED": "The selected file cannot be processed.",
+    "ACCEPTED_FORMATS": "Accepted formats:",
+    "FORMATS_LIST": "CSV, XLSX, JSON",
+    "VERIFY_FILE_TYPE": "Please verify the file type and try again."
+  },
   "PAGINATOR": {
     "FIRST_PAGE": "First page",
     "ITEMS_PER_PAGE": "Items per page",

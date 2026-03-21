@@ -54,6 +54,14 @@
   "DELETE_ACCOUNT_TITLE": "Mein Konto löschen",
   "DELETE_ACCOUNT_DESC": "Das Konto dauerhaft löschen",
   "DELETE_ACCOUNT": "Konto löschen",
+  "CLOSE": "Schließen",
+  "DIALOG": {
+    "INVALID_FILE_TYPE": "Ungültiger Dateityp",
+    "FILE_CANNOT_BE_PROCESSED": "Die ausgewählte Datei kann nicht verarbeitet werden.",
+    "ACCEPTED_FORMATS": "Akzeptierte Formate:",
+    "FORMATS_LIST": "CSV, XLSX, JSON",
+    "VERIFY_FILE_TYPE": "Bitte überprüfen Sie den Dateityp und versuchen Sie es erneut."
+  },
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
     "ITEMS_PER_PAGE": "Elemente pro Seite",

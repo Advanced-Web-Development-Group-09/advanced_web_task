@@ -8,10 +8,18 @@ import {
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { Datasets } from '../../../pages/datasets/datasets';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wrong-file-type-dialog',
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
+  imports: [
+    MatButtonModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogTitle,
+    MatDialogContent,
+    TranslatePipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './wrong-file-type-dialog.html',
 })
