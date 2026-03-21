@@ -3,9 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-registration',
@@ -14,6 +16,7 @@ import { MatIcon } from '@angular/material/icon';
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterLink,
     TranslatePipe,
     MatIcon,
@@ -37,5 +40,25 @@ export class Registration {
     this.isDarkMode = this.isDarkMode === 'light' ? 'dark' : 'light';
 
     document.documentElement.classList.toggle('dark-theme', this.isDarkMode === 'dark');
+  }
+
+  // Form group for registration
+
+  registerForm = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/), // At least one uppercase letter and one number
+    ]),
+  });
+
+  onSignUp() {
+    // Implement sign-up logic here
+
+    if (this.registerForm.valid) {
+      // Perform sign-up action
+    }
   }
 }

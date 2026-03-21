@@ -73,5 +73,11 @@
     "RANGE_EMPTY": "Seite 1 von 1",
     "RANGE_PAGE": "Seite {{page}} von {{totalPages}}"
   },
-  "LOGIN_ERROR": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
+  "LOGIN_ERROR": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut.",
+  "USERNAME_REQUIRED": "Benutzername ist erforderlich",
+  "EMAIL_REQUIRED": "E-Mail ist erforderlich",
+  "EMAIL_INVALID": "Ungültige E-Mail-Adresse",
+  "PASSWORD_REQUIRED": "Passwort ist erforderlich",
+  "PASSWORD_MIN_LENGTH": "Mindestens 8 Zeichen erforderlich",
+  "PASSWORD_PATTERN": "Großbuchstabe und Zahl erforderlich"
 }

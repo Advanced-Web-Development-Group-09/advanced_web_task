@@ -1,27 +1,67 @@
 <div class="flex">
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
   <div class="flex items-center justify-center flex-1 w-fit">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 w-62.5">
       <p class="text-4xl font-medium" style="color: var(--mat-sys-on-surface)">
         {{ 'SIGN_UP' | translate }}
       </p>
       <p style="color: var(--mat-sys-on-surface)">{{ 'REQUIRED_FIELDS' | translate }}</p>
-      <form class="flex flex-col gap-4">
-        <mat-form-field>
+      <form class="flex flex-col gap-2" [formGroup]="registerForm">
+        <!-- USERNAME -->
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'USERNAME' | translate }}</mat-label>
-          <input matInput />
+          <input matInput formControlName="username" />
+
+          @if (registerForm.get('username')?.touched && registerForm.get('username')?.invalid) {
+            <mat-error>
+              {{ 'USERNAME_REQUIRED' | translate }}
+            </mat-error>
+          }
         </mat-form-field>
-        <mat-form-field>
+
+        <!-- EMAIL -->
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
-          <input matInput />
+          <input matInput formControlName="email" />
+
+          @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+            <mat-error>
+              @switch (true) {
+                @case (registerForm.get('email')?.hasError('required')) {
+                  {{ 'EMAIL_REQUIRED' | translate }}
+                }
+                @case (registerForm.get('email')?.hasError('email')) {
+                  {{ 'EMAIL_INVALID' | translate }}
+                }
+              }
+            </mat-error>
+          }
         </mat-form-field>
-        <mat-form-field>
+
+        <!-- PASSWORD -->
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
-          <input matInput type="password" />
+          <input matInput type="password" formControlName="password" />
+
+          @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+            <mat-error>
+              @switch (true) {
+                @case (registerForm.get('password')?.hasError('required')) {
+                  {{ 'PASSWORD_REQUIRED' | translate }}
+                }
+                @case (registerForm.get('password')?.hasError('minlength')) {
+                  {{ 'PASSWORD_MIN_LENGTH' | translate }}
+                }
+                @case (registerForm.get('password')?.hasError('pattern')) {
+                  {{ 'PASSWORD_PATTERN' | translate }}
+                }
+              }
+            </mat-error>
+          }
         </mat-form-field>
       </form>
 
-      <a matButton="filled" class="w-25" routerLink="/dashboard">{{ 'SIGN_UP' | translate }}</a>
+      <a matButton="filled" class="w-25" (click)="onSignUp()">{{ 'SIGN_UP' | translate }}</a>
       <p style="color: var(--mat-sys-on-surface)">
         {{ 'ALREADY_HAVE_ACCOUNT' | translate }}
         <a routerLink="/login" class="font-medium">{{ 'LOGIN_INFO' | translate }}</a>

@@ -8,14 +8,14 @@
       <p style="color: var(--mat-sys-on-background)">
         {{ 'REQUIRED_FIELDS' | translate }}
       </p>
-      <form class="flex flex-col">
-        <mat-form-field>
+      <form class="flex flex-col" [formGroup]="loginForm">
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
-          <input matInput />
+          <input matInput formControlName="email" />
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
-          <input matInput />
+          <input matInput type="password" formControlName="password" />
         </mat-form-field>
         @if (loginError) {
           <p style="color: var(--mat-sys-error)">

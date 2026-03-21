@@ -73,5 +73,11 @@
     "RANGE_EMPTY": "Page 1 of 1",
     "RANGE_PAGE": "Page {{page}} of {{totalPages}}"
   },
-  "LOGIN_ERROR": "Login failed. Please check your credentials and try again."
+  "LOGIN_ERROR": "Login failed. Please check your credentials and try again.",
+  "USERNAME_REQUIRED": "Username is required",
+  "EMAIL_REQUIRED": "Email is required",
+  "EMAIL_INVALID": "Please enter a valid email address",
+  "PASSWORD_REQUIRED": "Password is required",
+  "PASSWORD_MIN_LENGTH": "Minimum 8 characters",
+  "PASSWORD_PATTERN": "Must include uppercase letter and number"
 }
