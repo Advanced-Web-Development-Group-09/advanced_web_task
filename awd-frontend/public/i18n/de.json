@@ -36,6 +36,13 @@
   "DOWNLOAD": "Herunterladen",
   "PLACE": "Platz",
   "POINTS": "Punkte",
+  "EMAIL": "E-Mail",
+  "BUTTON": "Anmelden",
+  "NO_ACCOUNT": "Sie haben noch kein Konto?",
+  "SIGN_UP": "Jetzt registrieren!",
+  "LOGIN": "Anmelden",
+  "REQUIRED_FIELDS": "Alle Felder sind erforderlich",
+  "PASSWORD": "Passwort",
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
     "ITEMS_PER_PAGE": "Elemente pro Seite",

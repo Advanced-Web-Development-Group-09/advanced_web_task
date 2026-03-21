@@ -36,6 +36,13 @@
   "DOWNLOAD": "Download",
   "PLACE": "Place",
   "POINTS": "Points",
+  "EMAIL": "E-Mail",
+  "BUTTON": "Login",
+  "NO_ACCOUNT": "Don't have an account?",
+  "SIGN_UP": "Sign up now!",
+  "LOGIN": "Login",
+  "REQUIRED_FIELDS": "All fields are required",
+  "PASSWORD": "Password",
   "PAGINATOR": {
     "FIRST_PAGE": "First page",
     "ITEMS_PER_PAGE": "Items per page",

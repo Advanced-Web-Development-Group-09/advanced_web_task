@@ -2,22 +2,29 @@
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
   <div class="flex items-center justify-center flex-1 w-fit">
     <div class="flex flex-col gap-4">
-      <p class="text-4xl font-medium" style="color: var(--mat-sys-on-background)">Login</p>
-      <p style="color: var(--mat-sys-on-background)">All this fields are required</p>
+      <p class="text-4xl font-medium" style="color: var(--mat-sys-on-background)">
+        {{ 'LOGIN' | translate }}
+      </p>
+      <p style="color: var(--mat-sys-on-background)">
+        {{ 'REQUIRED_FIELDS' | translate }}
+      </p>
       <form class="flex flex-col gap-4">
         <mat-form-field>
-          <mat-label>Email</mat-label>
+          <mat-label>{{ 'EMAIL' | translate }}</mat-label>
           <input matInput />
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Password</mat-label>
+          <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
           <input matInput />
         </mat-form-field>
       </form>
 
-      <a matButton="filled" class="w-25 button-color" routerLink="/dashboard">Login</a>
+      <a matButton="filled" class="w-25 button-color" routerLink="/dashboard">
+        {{ 'LOGIN' | translate }}
+      </a>
       <p>
-        Don't have an Account? <a routerLink="/registration" class="font-medium">Sign up now!</a>
+        {{ 'NO_ACCOUNT' | translate }}
+        <a routerLink="/registration" class="font-medium">{{ 'SIGN_UP' | translate }}</a>
       </p>
     </div>
   </div>
