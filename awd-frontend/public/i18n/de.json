@@ -79,5 +79,7 @@
   "EMAIL_INVALID": "Ungültige E-Mail-Adresse",
   "PASSWORD_REQUIRED": "Passwort ist erforderlich",
   "PASSWORD_MIN_LENGTH": "Mindestens 8 Zeichen erforderlich",
-  "PASSWORD_PATTERN": "Großbuchstabe und Zahl erforderlich"
+  "PASSWORD_PATTERN": "Großbuchstabe und Zahl erforderlich",
+  "EMAIL_ALREADY_REGISTERED": "E-Mail bereits registriert",
+  "USERNAME_ALREADY_TAKEN": "Benutzername bereits vergeben"
 }

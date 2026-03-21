@@ -2,20 +2,19 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { RegisterPayload, RegisterService } from '../../services/register/register.service';
 
 @Component({
   selector: 'app-registration',
+  standalone: true,
   imports: [
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterLink,
     TranslatePipe,
@@ -24,41 +23,81 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   templateUrl: './registration.html',
 })
 export class Registration {
-  // Dark mode & language state
-
   isDarkMode = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
 
-  constructor(private translate: TranslateService) {}
+  constructor(
+    private translate: TranslateService,
+    private registerService: RegisterService,
+  ) {
+    this.registerForm.controls.email.valueChanges.subscribe(() => {
+      if (this.registerForm.controls.email.hasError('alreadyTaken')) {
+        this.registerForm.controls.email.updateValueAndValidity({ onlySelf: true });
+      }
+    });
+    this.registerForm.controls.username.valueChanges.subscribe(() => {
+      if (this.registerForm.controls.username.hasError('alreadyTaken')) {
+        this.registerForm.controls.username.updateValueAndValidity({ onlySelf: true });
+      }
+    });
+  }
+
+  registerForm = new FormGroup({
+    username: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    email: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
+    password: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/),
+      ],
+    }),
+  });
+
+  // Convenience getter
+  get f() {
+    return this.registerForm.controls;
+  }
 
   toggleLanguage() {
     const currentLang = this.translate.getCurrentLang() || this.translate.getFallbackLang();
-    const newLang = currentLang === 'en' ? 'de' : 'en';
-    this.translate.use(newLang);
+    this.translate.use(currentLang === 'en' ? 'de' : 'en');
   }
 
   toggleDarkMode() {
     this.isDarkMode = this.isDarkMode === 'light' ? 'dark' : 'light';
-
     document.documentElement.classList.toggle('dark-theme', this.isDarkMode === 'dark');
   }
 
-  // Form group for registration
-
-  registerForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/), // At least one uppercase letter and one number
-    ]),
-  });
-
   onSignUp() {
-    // Implement sign-up logic here
-
-    if (this.registerForm.valid) {
-      // Perform sign-up action
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    const formData: RegisterPayload = {
+      username: this.f.username.value,
+      email: this.f.email.value,
+      password: this.f.password.value,
+    };
+
+    this.registerService.register(formData).subscribe({
+      next: (response) => {
+        console.log('Registration successful:', response);
+        // TODO: redirect or auto-login
+      },
+      error: (error) => {
+        if (error?.error?.detail === 'Email already registered') {
+          this.f.email.setErrors({ ...this.f.email.errors, alreadyTaken: true });
+        } else if (error?.error?.detail === 'Username already registered') {
+          this.f.username.setErrors({ ...this.f.username.errors, alreadyTaken: true });
+        } else {
+          console.error('Registration failed:', error);
+        }
+      },
+    });
   }
 }

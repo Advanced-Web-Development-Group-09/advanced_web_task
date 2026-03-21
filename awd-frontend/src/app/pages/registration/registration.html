@@ -1,20 +1,34 @@
 <div class="flex">
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
+
   <div class="flex items-center justify-center flex-1 w-fit">
-    <div class="flex flex-col gap-4 w-62.5">
+    <div class="flex flex-col gap-4 w-65">
+      <!-- TITLE -->
       <p class="text-4xl font-medium" style="color: var(--mat-sys-on-surface)">
         {{ 'SIGN_UP' | translate }}
       </p>
-      <p style="color: var(--mat-sys-on-surface)">{{ 'REQUIRED_FIELDS' | translate }}</p>
-      <form class="flex flex-col gap-2" [formGroup]="registerForm">
+
+      <p style="color: var(--mat-sys-on-surface)">
+        {{ 'REQUIRED_FIELDS' | translate }}
+      </p>
+
+      <!-- FORM -->
+      <form class="flex flex-col gap-2" [formGroup]="registerForm" (ngSubmit)="onSignUp()">
         <!-- USERNAME -->
         <mat-form-field appearance="outline">
           <mat-label>{{ 'USERNAME' | translate }}</mat-label>
           <input matInput formControlName="username" />
 
-          @if (registerForm.get('username')?.touched && registerForm.get('username')?.invalid) {
+          @if (registerForm.controls.username.touched && registerForm.controls.username.invalid) {
             <mat-error>
-              {{ 'USERNAME_REQUIRED' | translate }}
+              @switch (true) {
+                @case (registerForm.controls.username.hasError('required')) {
+                  {{ 'USERNAME_REQUIRED' | translate }}
+                }
+                @case (registerForm.controls.username.hasError('alreadyTaken')) {
+                  {{ 'USERNAME_ALREADY_TAKEN' | translate }}
+                }
+              }
             </mat-error>
           }
         </mat-form-field>
@@ -24,14 +38,17 @@
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
           <input matInput formControlName="email" />
 
-          @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+          @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
             <mat-error>
               @switch (true) {
-                @case (registerForm.get('email')?.hasError('required')) {
+                @case (registerForm.controls.email.hasError('required')) {
                   {{ 'EMAIL_REQUIRED' | translate }}
                 }
-                @case (registerForm.get('email')?.hasError('email')) {
+                @case (registerForm.controls.email.hasError('email')) {
                   {{ 'EMAIL_INVALID' | translate }}
+                }
+                @case (registerForm.controls.email.hasError('alreadyTaken')) {
+                  {{ 'EMAIL_ALREADY_REGISTERED' | translate }}
                 }
               }
             </mat-error>
@@ -43,37 +60,48 @@
           <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
           <input matInput type="password" formControlName="password" />
 
-          @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+          @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
             <mat-error>
               @switch (true) {
-                @case (registerForm.get('password')?.hasError('required')) {
+                @case (registerForm.controls.password.hasError('required')) {
                   {{ 'PASSWORD_REQUIRED' | translate }}
                 }
-                @case (registerForm.get('password')?.hasError('minlength')) {
+                @case (registerForm.controls.password.hasError('minlength')) {
                   {{ 'PASSWORD_MIN_LENGTH' | translate }}
                 }
-                @case (registerForm.get('password')?.hasError('pattern')) {
+                @case (registerForm.controls.password.hasError('pattern')) {
                   {{ 'PASSWORD_PATTERN' | translate }}
                 }
               }
             </mat-error>
           }
         </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" class="w-25">
+          {{ 'SIGN_UP' | translate }}
+        </button>
       </form>
 
-      <a matButton="filled" class="w-25" (click)="onSignUp()">{{ 'SIGN_UP' | translate }}</a>
+      <!-- LOGIN LINK -->
       <p style="color: var(--mat-sys-on-surface)">
         {{ 'ALREADY_HAVE_ACCOUNT' | translate }}
-        <a routerLink="/login" class="font-medium">{{ 'LOGIN_INFO' | translate }}</a>
+        <a routerLink="/login" class="font-medium">
+          {{ 'LOGIN_INFO' | translate }}
+        </a>
       </p>
     </div>
   </div>
+
+  <!-- ACTION BUTTONS -->
   <div class="absolute top-4 right-4 flex flex-row gap-2">
     <button matMiniFab (click)="toggleLanguage()">
       <mat-icon>language</mat-icon>
     </button>
+
     <button matMiniFab (click)="toggleDarkMode()">
-      <mat-icon>{{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      <mat-icon>
+        {{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}
+      </mat-icon>
     </button>
   </div>
 </div>

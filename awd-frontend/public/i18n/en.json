@@ -79,5 +79,7 @@
   "EMAIL_INVALID": "Please enter a valid email address",
   "PASSWORD_REQUIRED": "Password is required",
   "PASSWORD_MIN_LENGTH": "Minimum 8 characters",
-  "PASSWORD_PATTERN": "Must include uppercase letter and number"
+  "PASSWORD_PATTERN": "Uppercase letter and number required",
+  "EMAIL_ALREADY_REGISTERED": "Email is already registered",
+  "USERNAME_ALREADY_TAKEN": "Username is already taken"
 }
