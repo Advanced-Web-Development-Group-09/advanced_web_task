@@ -3,6 +3,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface PlayerElement {
   place: number;
@@ -22,7 +23,7 @@ const PLAYER_DATA: PlayerElement[] = [
 
 @Component({
   selector: 'app-leaderboard',
-  imports: [MatSidenavModule, Sidenav, MatCardModule, MatTableModule],
+  imports: [MatSidenavModule, Sidenav, MatCardModule, MatTableModule, TranslatePipe],
   templateUrl: './leaderboard.html',
   styleUrl: './leaderboard.css',
 })

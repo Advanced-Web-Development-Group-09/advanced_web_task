@@ -34,6 +34,8 @@
   "SIZE": "Größe",
   "DATE": "Datum",
   "DOWNLOAD": "Herunterladen",
+  "PLACE": "Platz",
+  "POINTS": "Punkte",
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
     "ITEMS_PER_PAGE": "Elemente pro Seite",
