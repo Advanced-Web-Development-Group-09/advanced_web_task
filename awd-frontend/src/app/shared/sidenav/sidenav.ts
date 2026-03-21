@@ -9,4 +9,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidenav.html',
   styleUrl: './sidenav.css',
 })
-export class Sidenav {}
+export class Sidenav {
+  isDarkMode = 'light';
+
+  toggleDarkMode() {
+    this.isDarkMode = this.isDarkMode === 'light' ? 'dark' : 'light';
+
+    document.documentElement.classList.toggle('dark-theme', this.isDarkMode === 'dark');
+  }
+}

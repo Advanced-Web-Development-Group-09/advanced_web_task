@@ -75,8 +75,8 @@
     <button matMiniFab>
       <mat-icon>language</mat-icon>
     </button>
-    <button matMiniFab>
-      <mat-icon>dark_mode</mat-icon>
+    <button matMiniFab (click)="toggleDarkMode()">
+      <mat-icon>{{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
     </button>
   </div>
 </div>
