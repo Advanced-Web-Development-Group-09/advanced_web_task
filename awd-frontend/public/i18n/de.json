@@ -72,5 +72,6 @@
     "PREVIOUS_PAGE": "Vorherige Seite",
     "RANGE_EMPTY": "Seite 1 von 1",
     "RANGE_PAGE": "Seite {{page}} von {{totalPages}}"
-  }
+  },
+  "LOGIN_ERROR": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
 }

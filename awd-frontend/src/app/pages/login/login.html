@@ -1,14 +1,14 @@
 <div class="flex">
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
-  <div class="flex items-center justify-center flex-1 w-fit">
-    <div class="flex flex-col gap-4">
+  <div class="flex items-center justify-center flex-1">
+    <div class="flex flex-col gap-4 w-62.5">
       <p class="text-4xl font-medium" style="color: var(--mat-sys-on-background)">
         {{ 'LOGIN' | translate }}
       </p>
       <p style="color: var(--mat-sys-on-background)">
         {{ 'REQUIRED_FIELDS' | translate }}
       </p>
-      <form class="flex flex-col gap-4">
+      <form class="flex flex-col">
         <mat-form-field>
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
           <input matInput />
@@ -17,9 +17,13 @@
           <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
           <input matInput />
         </mat-form-field>
+        @if (loginError) {
+          <p style="color: var(--mat-sys-error)">
+            {{ 'LOGIN_ERROR' | translate }}
+          </p>
+        }
       </form>
-
-      <a matButton="filled" class="w-25 button-color" routerLink="/dashboard">
+      <a matButton="filled" class="w-25 button-color" (click)="onLogin()">
         {{ 'LOGIN' | translate }}
       </a>
       <p>

@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +19,8 @@ import { MatIcon } from '@angular/material/icon';
     RouterLink,
     TranslatePipe,
     MatIcon,
+    CommonModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './login.html',
 })
@@ -37,5 +41,17 @@ export class Login {
     this.isDarkMode = this.isDarkMode === 'light' ? 'dark' : 'light';
 
     document.documentElement.classList.toggle('dark-theme', this.isDarkMode === 'dark');
+  }
+
+  loginError: boolean | null = null;
+
+  loginForm = new FormGroup({
+    email: new FormControl(''),
+    password: new FormControl(''),
+  });
+
+  onLogin() {
+    // Handle login logic here, e.g., call an authentication service
+    this.loginError = true;
   }
 }

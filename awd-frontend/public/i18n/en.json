@@ -72,5 +72,6 @@
     "PREVIOUS_PAGE": "Previous page",
     "RANGE_EMPTY": "Page 1 of 1",
     "RANGE_PAGE": "Page {{page}} of {{totalPages}}"
-  }
+  },
+  "LOGIN_ERROR": "Login failed. Please check your credentials and try again."
 }
