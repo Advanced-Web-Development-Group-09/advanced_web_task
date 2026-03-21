@@ -1,43 +1,76 @@
 <div class="flex">
   <img class="h-screen" src="DB-Background.png" alt="DB Image" />
+
   <div class="flex items-center justify-center flex-1">
     <div class="flex flex-col gap-4 w-62.5">
+      <!-- TITLE -->
       <p class="text-4xl font-medium" style="color: var(--mat-sys-on-background)">
         {{ 'LOGIN' | translate }}
       </p>
+
       <p style="color: var(--mat-sys-on-background)">
         {{ 'REQUIRED_FIELDS' | translate }}
       </p>
-      <form class="flex flex-col" [formGroup]="loginForm">
+
+      <!-- FORM -->
+      <form class="flex flex-col gap-2" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <!-- EMAIL / USERNAME -->
         <mat-form-field appearance="outline">
           <mat-label>{{ 'EMAIL' | translate }}</mat-label>
-          <input matInput formControlName="email" />
+          <input matInput formControlName="username" />
+
+          @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+            <mat-error>
+              {{ 'EMAIL_REQUIRED' | translate }}
+            </mat-error>
+          }
         </mat-form-field>
+
+        <!-- PASSWORD -->
         <mat-form-field appearance="outline">
           <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
           <input matInput type="password" formControlName="password" />
+
+          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+            <mat-error>
+              {{ 'PASSWORD_REQUIRED' | translate }}
+            </mat-error>
+          }
         </mat-form-field>
-        @if (loginError) {
+
+        <!-- BACKEND ERROR -->
+        @if (loginForm.errors?.['invalidCredentials']) {
           <p style="color: var(--mat-sys-error)">
             {{ 'LOGIN_ERROR' | translate }}
           </p>
         }
+
+        <!-- SUBMIT BUTTON -->
+        <button mat-raised-button color="primary" type="submit" class="w-25">
+          {{ 'LOGIN' | translate }}
+        </button>
       </form>
-      <a matButton="filled" class="w-25 button-color" (click)="onLogin()">
-        {{ 'LOGIN' | translate }}
-      </a>
+
+      <!-- REGISTER LINK -->
       <p>
         {{ 'NO_ACCOUNT' | translate }}
-        <a routerLink="/registration" class="font-medium">{{ 'SIGN_UP_INFO' | translate }}</a>
+        <a routerLink="/registration" class="font-medium">
+          {{ 'SIGN_UP_INFO' | translate }}
+        </a>
       </p>
     </div>
   </div>
+
+  <!-- ACTION BUTTONS -->
   <div class="absolute top-4 right-4 flex flex-row gap-2">
     <button matMiniFab (click)="toggleLanguage()">
       <mat-icon>language</mat-icon>
     </button>
+
     <button matMiniFab (click)="toggleDarkMode()">
-      <mat-icon>{{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      <mat-icon>
+        {{ isDarkMode == 'light' ? 'dark_mode' : 'light_mode' }}
+      </mat-icon>
     </button>
   </div>
 </div>

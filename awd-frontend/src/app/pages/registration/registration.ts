@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { RegisterPayload, RegisterService } from '../../services/register/register.service';
+import { LoginService } from '../../services/login/login.service';
 
 @Component({
   selector: 'app-registration',
@@ -28,6 +30,8 @@ export class Registration {
   constructor(
     private translate: TranslateService,
     private registerService: RegisterService,
+    private loginService: LoginService,
+    private router: Router,
   ) {
     this.registerForm.controls.email.valueChanges.subscribe(() => {
       if (this.registerForm.controls.email.hasError('alreadyTaken')) {
@@ -57,7 +61,6 @@ export class Registration {
     }),
   });
 
-  // Convenience getter
   get f() {
     return this.registerForm.controls;
   }
@@ -87,7 +90,16 @@ export class Registration {
     this.registerService.register(formData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-        // TODO: redirect or auto-login
+        this.loginService.login(formData).subscribe({
+          next: (res) => {
+            console.log('Login success:', res);
+            localStorage.setItem('token', res.access_token);
+            this.router.navigate(['/dashboard']);
+          },
+          error: (err) => {
+            console.error('Login failed:', err);
+          },
+        });
       },
       error: (error) => {
         if (error?.error?.detail === 'Email already registered') {
