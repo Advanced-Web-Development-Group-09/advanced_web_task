@@ -37,11 +37,11 @@ tr.example-element-row {
 }
 
 tr.example-element-row:not(.example-expanded-row):hover {
-  background: whitesmoke;
+  background: var(--mat-sys-background);
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  background: #efefef;
+  background: var(--mat-sys-background);
 }
 
 .example-element-row td {
