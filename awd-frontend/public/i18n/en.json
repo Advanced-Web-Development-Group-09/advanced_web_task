@@ -54,13 +54,15 @@
   "DELETE_ACCOUNT_TITLE": "Delete my Account",
   "DELETE_ACCOUNT_DESC": "Permanently delete the account",
   "DELETE_ACCOUNT": "Delete Account",
-  "Close": "Close",
+  "CLOSE": "Close",
   "DIALOG": {
     "INVALID_FILE_TYPE": "Invalid file type",
     "FILE_CANNOT_BE_PROCESSED": "The selected file cannot be processed.",
     "ACCEPTED_FORMATS": "Accepted formats:",
     "FORMATS_LIST": "CSV, XLSX, JSON",
-    "VERIFY_FILE_TYPE": "Please verify the file type and try again."
+    "VERIFY_FILE_TYPE": "Please verify the file type and try again.",
+    "DELETE_TITLE": "Account Deletion",
+    "DELETE_CONFIRMATION": "Are you sure you want to delete your account? All your data will be permanently removed and cannot be recovered."
   },
   "PAGINATOR": {
     "FIRST_PAGE": "First page",

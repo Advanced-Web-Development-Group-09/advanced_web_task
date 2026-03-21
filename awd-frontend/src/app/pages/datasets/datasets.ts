@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { WrongFileTypeDialog } from '../../dialogs/upload_dialog/wrong-file-type-dialog/wrong-file-type-dialog';
+import { WrongFileTypeDialog } from '../../dialogs/wrong-file-type-dialog/wrong-file-type-dialog';
 
 export interface DatasetElement {
   name: string;

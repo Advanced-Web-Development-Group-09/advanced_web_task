@@ -7,7 +7,7 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { Datasets } from '../../../pages/datasets/datasets';
+import { Datasets } from '../../pages/datasets/datasets';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

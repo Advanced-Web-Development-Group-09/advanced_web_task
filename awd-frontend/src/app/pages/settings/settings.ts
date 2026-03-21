@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeletionDialog } from '../../dialogs/confirm-deletion-dialog/confirm-deletion-dialog';
 
 @Component({
   selector: 'app-settings',
@@ -33,6 +35,9 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Settings {
+  // Dialog Logic
+  readonly dialog = inject(MatDialog);
+
   readonly newPassword1 = new FormControl('', [Validators.required, Validators.email]); // CHANGE THIS TO PATTERN VALIDATOR
   readonly newPassword2 = new FormControl('', [Validators.required, Validators.email]); // CHANGE THIS TO PATTERN VALIDATOR
 
@@ -69,5 +74,9 @@ export class Settings {
     } else {
       this.errorMessage2.set('');
     }
+  }
+
+  openDeleteDialog() {
+    this.dialog.open(ConfirmDeletionDialog);
   }
 }

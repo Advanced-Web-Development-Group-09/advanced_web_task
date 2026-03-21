@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{ 'DIALOG.DELETE_TITLE' | translate }}</h2>
+<mat-dialog-content>
+  <p class="text-lg" style="color: var(--mat-sys-on-surface)">
+    {{ 'DIALOG.DELETE_CONFIRMATION' | translate }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close cdkFocusInitial>{{ 'CLOSE' | translate }}</button>
+  <button matButton mat-dialog-close (click)="onConfirm()" cdkFocusInitial>
+    {{ 'CONFIRM' | translate }}
+  </button>
+</mat-dialog-actions>

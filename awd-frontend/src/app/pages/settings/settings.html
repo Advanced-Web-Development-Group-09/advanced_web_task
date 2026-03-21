@@ -42,7 +42,7 @@
               {{ 'DELETE_ACCOUNT_DESC' | translate }}
             </p>
           </div>
-          <a matFab extended href="/login">
+          <a matFab extended (click)="openDeleteDialog()">
             <mat-icon>delete</mat-icon>
             {{ 'DELETE_ACCOUNT' | translate }}
           </a>

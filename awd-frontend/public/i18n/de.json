@@ -60,7 +60,9 @@
     "FILE_CANNOT_BE_PROCESSED": "Die ausgewählte Datei kann nicht verarbeitet werden.",
     "ACCEPTED_FORMATS": "Akzeptierte Formate:",
     "FORMATS_LIST": "CSV, XLSX, JSON",
-    "VERIFY_FILE_TYPE": "Bitte überprüfen Sie den Dateityp und versuchen Sie es erneut."
+    "VERIFY_FILE_TYPE": "Bitte überprüfen Sie den Dateityp und versuchen Sie es erneut.",
+    "DELETE_TITLE": "Konto löschen",
+    "DELETE_CONFIRMATION": "Möchten Sie Ihr Konto wirklich löschen? Alle Ihre Daten werden dauerhaft entfernt und können nicht wiederhergestellt werden."
   },
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
