@@ -4,11 +4,11 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-card appearance="outlined">
-      <mat-card-title>Dataset Upload</mat-card-title>
+      <mat-card-title>{{ 'DATASET_UPLOAD' | translate }}</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col gap-4">
           <div class="upload-area">
-            <p>Drag and drop your dataset here, or click to select a file.</p>
+            <p>{{ 'DRAG_DROP_INSTRUCTION' | translate }}</p>
             <div
               class="upload-dropzone"
               [class.drag-active]="isDragging"
@@ -17,9 +17,8 @@
               (drop)="onDrop($event)"
               (click)="fileInput.click()"
             >
-              <p>Drag and drop your dataset here, or click to select a file.</p>
-
-              <button matButton="filled">Select File</button>
+              <p>{{ 'DRAG_DROP_INSTRUCTION' | translate }}</p>
+              <button matButton="filled">{{ 'SELECT_FILE' | translate }}</button>
               <input
                 #fileInput
                 type="file"
@@ -37,14 +36,14 @@
                 <mat-icon fontIcon="upload_file"></mat-icon>
                 <div class="flex flex-col gap-0.5">
                   <p class="font-medium">{{ file.name }}</p>
-                  <p>{{ file.size | number }} bytes</p>
+                  <p>{{ file.size | number }} {{ 'BYTES' | translate }}</p>
                 </div>
               </div>
               <div class="flex flex-row gap-4">
-                <button matMiniFab>
+                <button matMiniFab [title]="'CONFIRM' | translate">
                   <mat-icon>check</mat-icon>
                 </button>
-                <button matMiniFab>
+                <button matMiniFab [title]="'DELETE' | translate">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -53,24 +52,23 @@
         </div>
       </mat-card-content>
     </mat-card>
+
     <mat-card appearance="outlined">
+      <mat-card-title>{{ 'UPLOADED_DATASETS' | translate }}</mat-card-title>
       <mat-card-content>
         <table mat-table [dataSource]="dataSourceUploaded" class="mat-elevation-z8">
-          <!--- Note that these columns can be defined in any order.
-                The actual rendered columns are set as a property on the row definition" -->
-
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'NAME' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="size">
-            <th mat-header-cell *matHeaderCellDef>Size</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'SIZE' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.size }}</td>
           </ng-container>
 
           <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'DATE' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.date }}</td>
           </ng-container>
 
@@ -86,27 +84,26 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-        <mat-paginator #uploadedPaginator [pageSizeOptions]="[5, 10, 20]"> </mat-paginator>
+        <mat-paginator #uploadedPaginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
       </mat-card-content>
     </mat-card>
+
     <mat-card appearance="outlined">
+      <mat-card-title>{{ 'EXPORTED_DATASETS' | translate }}</mat-card-title>
       <mat-card-content>
         <table mat-table [dataSource]="dataSourceExported" class="mat-elevation-z8">
-          <!--- Note that these columns can be defined in any order.
-                The actual rendered columns are set as a property on the row definition" -->
-
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'NAME' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="size">
-            <th mat-header-cell *matHeaderCellDef>Size</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'SIZE' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.size }}</td>
           </ng-container>
 
           <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'DATE' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.date }}</td>
           </ng-container>
 
@@ -122,7 +119,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-        <mat-paginator #exportedPaginator [pageSizeOptions]="[5, 10, 20]"> </mat-paginator>
+        <mat-paginator #exportedPaginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
       </mat-card-content>
     </mat-card>
   </mat-drawer-content>

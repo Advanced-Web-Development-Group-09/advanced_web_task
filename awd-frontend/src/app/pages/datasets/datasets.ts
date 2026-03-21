@@ -7,6 +7,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DatasetElement {
   name: string;
@@ -51,6 +52,7 @@ const EXPORTED_DATA: DatasetElement[] = [
     MatButtonModule,
     MatPaginatorModule,
     CommonModule,
+    TranslatePipe,
   ],
   templateUrl: './datasets.html',
   styleUrl: './datasets.css',
