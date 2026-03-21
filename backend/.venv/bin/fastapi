@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/poalelungi_ion/code /task_angular/task_3/backend/.venv/bin/python3" "$0" "$@"
+'''exec' "/home/poalelungi_ion/code /task_angular/backend/.venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

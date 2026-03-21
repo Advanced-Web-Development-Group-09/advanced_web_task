@@ -1,23 +1,17 @@
 import { Routes } from '@angular/router';
-
-import { Analytics } from './pages/analytics/analytics';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { Datasets } from './pages/datasets/datasets';
-import { Leaderboard } from './pages/leaderboard/leaderboard';
-import { Login } from './pages/login/login';
-import { Profile } from './pages/profile/profile';
-import { Registration } from './pages/registration/registration';
-import { Settings } from './pages/settings/settings';
+import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
+import { ProfileComponent } from './profile.component';
+import { TrainDataComponent } from './train-data.component';
+import { CalculationsComponent } from './calculations.component';
 
 export const routes: Routes = [
-    { path: 'analytics', component: Analytics },
-    { path: 'dashboard', component: Dashboard },
-    { path: 'datasets', component: Datasets },
-    { path: 'leaderboard', component: Leaderboard },
-    { path: 'login', component: Login },
-    { path: 'profile', component: Profile },
-    { path: 'registration', component: Registration },
-    { path: 'settings', component: Settings },
-    { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'train-data', component: TrainDataComponent },
+  { path: 'calculations', component: CalculationsComponent },
+  
+  { path: '', redirectTo: '/train-data', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
-    

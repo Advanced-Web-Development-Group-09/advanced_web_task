@@ -1,1 +1,21 @@
-<router-outlet></router-outlet>
+<div class="app-container" [class.auth-layout]="!showHeader()" [class.dark-theme]="isDarkMode()">
+  <aside class="sidebar" *ngIf="showHeader()">
+    <div class="sidebar-header">
+      <h2>🚆 DB Traveller</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/train-data" routerLinkActive="active-link">Datasets</a>
+      <a routerLink="/calculations" routerLinkActive="active-link">Analytics</a>
+      <a routerLink="/profile" routerLinkActive="active-link">Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-btn" (click)="toggleTheme()">
+        {{ isDarkMode() ? '☀️ Light' : '🌙 Dark' }}
+      </button>
+    </div>
+  </aside>
+  
+  <main class="content" [class.no-padding]="!showHeader()">
+    <router-outlet></router-outlet>
+  </main>
+</div>
