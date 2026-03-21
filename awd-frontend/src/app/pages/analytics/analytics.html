@@ -4,12 +4,12 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-card appearance="outlined">
-      <mat-card-title>Train Cancellation Odds</mat-card-title>
+      <mat-card-title>{{ 'TRAIN_CANCELLATION_ODDS' | translate }}</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col items-center gap-4">
           <form>
             <mat-form-field>
-              <mat-label>Start Station</mat-label>
+              <mat-label>{{ 'START_STATION' | translate }}</mat-label>
               <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions | async; track option) {
@@ -20,7 +20,7 @@
           </form>
           <form>
             <mat-form-field>
-              <mat-label>End Station</mat-label>
+              <mat-label>{{ 'END_STATION' | translate }}</mat-label>
               <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions2 | async; track option) {
@@ -31,29 +31,29 @@
           </form>
           <button matFab extended>
             <mat-icon>calculate</mat-icon>
-            Start Calculation
+            {{ 'START_CALCULATION' | translate }}
           </button>
         </div>
       </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined">
-      <mat-card-title>Delay Statistics</mat-card-title>
+      <mat-card-title>{{ 'DELAY_STATISTICS' | translate }}</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col items-center">
           <button matFab extended>
             <mat-icon>calculate</mat-icon>
-            Start Calculation
+            {{ 'START_CALCULATION' | translate }}
           </button>
         </div>
       </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined">
-      <mat-card-title>Average State Delay</mat-card-title>
+      <mat-card-title>{{ 'AVERAGE_STATE_DELAY' | translate }}</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col items-center gap-4">
           <form>
             <mat-form-field>
-              <mat-label>State</mat-label>
+              <mat-label>{{ 'STATE' | translate }}</mat-label>
               <input
                 type="text"
                 matInput
@@ -69,7 +69,7 @@
           </form>
           <button matFab extended>
             <mat-icon>calculate</mat-icon>
-            Start Calculation
+            {{ 'START_CALCULATION' | translate }}
           </button>
         </div>
       </mat-card-content>

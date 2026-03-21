@@ -12,6 +12,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-analytics',
@@ -27,6 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatAutocompleteModule,
     MatInputModule,
     MatFormFieldModule,
+    TranslatePipe,
   ],
   templateUrl: './analytics.html',
   styleUrl: './analytics.css',

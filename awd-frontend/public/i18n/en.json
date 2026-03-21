@@ -5,5 +5,12 @@
   "LEADERBOARD": "Leaderboard",
   "PROFILE": "Profile",
   "SETTINGS": "Settings",
-  "LOGOUT": "Logout"
+  "LOGOUT": "Logout",
+  "TRAIN_CANCELLATION_ODDS": "Train Cancellation Odds",
+  "START_STATION": "Start Station",
+  "END_STATION": "End Station",
+  "START_CALCULATION": "Start Calculation",
+  "DELAY_STATISTICS": "Delay Statistics",
+  "AVERAGE_STATE_DELAY": "Average State Delay",
+  "STATE": "State"
 }

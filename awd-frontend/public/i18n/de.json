@@ -5,5 +5,12 @@
   "LEADERBOARD": "Rangliste",
   "PROFILE": "Profil",
   "SETTINGS": "Einstellungen",
-  "LOGOUT": "Abmelden"
+  "LOGOUT": "Abmelden",
+  "TRAIN_CANCELLATION_ODDS": "Wahrscheinlichkeit von Zugausfällen",
+  "START_STATION": "Startstation",
+  "END_STATION": "Endstation",
+  "START_CALCULATION": "Berechnung starten",
+  "DELAY_STATISTICS": "Verspätungsstatistiken",
+  "AVERAGE_STATE_DELAY": "Durchschnittliche Verspätung nach Bundesland",
+  "STATE": "Bundesland"
 }
