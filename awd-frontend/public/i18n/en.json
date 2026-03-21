@@ -21,5 +21,14 @@
   "ID": "ID",
   "STATION": "Station",
   "PLANNED_DEPARTURE": "Planned Departure",
-  "NO_DATA_FOUND": "No data matching the filter \"{{ searchValue }}\" was found."
+  "NO_DATA_FOUND": "No data matching the filter \"{{ searchValue }}\" was found.",
+  "PAGINATOR": {
+    "FIRST_PAGE": "First page",
+    "ITEMS_PER_PAGE": "Items per page",
+    "LAST_PAGE": "Last page",
+    "NEXT_PAGE": "Next page",
+    "PREVIOUS_PAGE": "Previous page",
+    "RANGE_EMPTY": "Page 1 of 1",
+    "RANGE_PAGE": "Page {{page}} of {{totalPages}}"
+  }
 }

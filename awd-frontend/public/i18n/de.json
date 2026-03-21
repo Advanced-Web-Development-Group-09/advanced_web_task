@@ -21,5 +21,14 @@
   "ID": "ID",
   "STATION": "Station",
   "PLANNED_DEPARTURE": "Geplante Abfahrt",
-  "NO_DATA_FOUND": "Keine Daten gefunden, die dem Filter \"{{ searchValue }}\" entsprechen."
+  "NO_DATA_FOUND": "Keine Daten gefunden, die dem Filter \"{{ searchValue }}\" entsprechen.",
+  "PAGINATOR": {
+    "FIRST_PAGE": "Erste Seite",
+    "ITEMS_PER_PAGE": "Elemente pro Seite",
+    "LAST_PAGE": "Letzte Seite",
+    "NEXT_PAGE": "Nächste Seite",
+    "PREVIOUS_PAGE": "Vorherige Seite",
+    "RANGE_EMPTY": "Seite 1 von 1",
+    "RANGE_PAGE": "Seite {{page}} von {{totalPages}}"
+  }
 }

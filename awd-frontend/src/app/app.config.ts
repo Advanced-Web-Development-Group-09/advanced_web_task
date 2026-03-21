@@ -4,6 +4,8 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomPaginatorIntl } from './shared/custom-paginator-intl/custom-paginator-intl';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +19,6 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en',
       lang: 'en',
     }),
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
   ],
 };
