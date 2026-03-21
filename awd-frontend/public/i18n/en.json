@@ -1,0 +1,9 @@
+{
+  "DASHBOARD": "Dashboard",
+  "ANALYTICS": "Analytics",
+  "DATASETS": "Datasets",
+  "LEADERBOARD": "Leaderboard",
+  "PROFILE": "Profile",
+  "SETTINGS": "Settings",
+  "LOGOUT": "Logout"
+}

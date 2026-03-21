@@ -14,7 +14,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>dashboard</mat-icon>
-      Dashboard
+      {{ 'DASHBOARD' | translate }}
     </a>
     <a
       matButton
@@ -23,7 +23,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>analytics</mat-icon>
-      Analytics
+      {{ 'ANALYTICS' | translate }}
     </a>
     <a
       matButton
@@ -32,7 +32,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>dataset</mat-icon>
-      Datasets
+      {{ 'DATASETS' | translate }}
     </a>
     <a
       matButton
@@ -41,7 +41,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>leaderboard</mat-icon>
-      Leaderboard
+      {{ 'LEADERBOARD' | translate }}
     </a>
     <a
       matButton
@@ -50,7 +50,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>account_circle</mat-icon>
-      Profile
+      {{ 'PROFILE' | translate }}
     </a>
     <a
       matButton
@@ -59,7 +59,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>settings</mat-icon>
-      Settings
+      {{ 'SETTINGS' | translate }}
     </a>
     <a
       matButton
@@ -68,11 +68,11 @@
       [routerLinkActiveOptions]="{ exact: true }"
     >
       <mat-icon>logout</mat-icon>
-      Logout
+      {{ 'LOGOUT' | translate }}
     </a>
   </div>
   <div class="flex flex-row gap-1 justify-evenly">
-    <button matMiniFab>
+    <button matMiniFab (click)="toggleLanguage()">
       <mat-icon>language</mat-icon>
     </button>
     <button matMiniFab (click)="toggleDarkMode()">
