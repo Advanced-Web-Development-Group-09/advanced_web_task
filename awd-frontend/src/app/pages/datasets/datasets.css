@@ -28,7 +28,7 @@ table {
 
 .upload-dropzone {
   position: relative;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--mat-sys-outline);
   border-radius: 12px;
   padding: 40px;
   text-align: center;
@@ -39,8 +39,8 @@ table {
 }
 
 .upload-dropzone.drag-active {
-  background-color: #f3f1ff;
-  border-color: #6750a4;
+  background-color: var(--mat-sys-primary-container);
+  border-color: var(--mat-sys-primary);
 }
 
 .upload-dropzone p {
