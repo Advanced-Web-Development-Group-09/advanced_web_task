@@ -81,5 +81,6 @@
   "PASSWORD_MIN_LENGTH": "Minimum 8 characters",
   "PASSWORD_PATTERN": "Uppercase letter and number required",
   "EMAIL_ALREADY_REGISTERED": "Email is already registered",
-  "USERNAME_ALREADY_TAKEN": "Username is already taken"
+  "USERNAME_ALREADY_TAKEN": "Username is already taken",
+  "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"
 }

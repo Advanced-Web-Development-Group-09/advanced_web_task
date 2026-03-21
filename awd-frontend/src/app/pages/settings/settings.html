@@ -2,35 +2,74 @@
   <mat-drawer mode="side" opened>
     <app-sidenav></app-sidenav>
   </mat-drawer>
+
   <mat-drawer-content>
+    <!-- PASSWORD CHANGE -->
     <mat-card appearance="outlined">
       <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <mat-form-field>
+        <form
+          [formGroup]="passwordForm"
+          (ngSubmit)="onChangePassword()"
+          class="flex flex-col gap-4 w-62.5"
+        >
+          <!-- CURRENT PASSWORD -->
+          <mat-form-field appearance="outline">
             <mat-label>{{ 'OLD_PASSWORD' | translate }}</mat-label>
-            <input matInput />
+            <input matInput type="password" formControlName="currentPassword" />
+
+            @if (f.currentPassword.touched && f.currentPassword.hasError('required')) {
+              <mat-error>{{ 'PASSWORD_REQUIRED' | translate }}</mat-error>
+            }
+
+            @if (f.currentPassword.hasError('incorrect')) {
+              <mat-error>{{ 'WRONG_PASSWORD' | translate }}</mat-error>
+            }
           </mat-form-field>
-          <mat-form-field>
+
+          <!-- NEW PASSWORD -->
+          <mat-form-field appearance="outline">
             <mat-label>{{ 'NEW_PASSWORD' | translate }}</mat-label>
-            <input matInput [formControl]="newPassword1" (blur)="updateErrorMessage1()" required />
-            @if (newPassword1.invalid) {
-              <mat-error>{{ errorMessage1() }}</mat-error>
+            <input matInput type="password" formControlName="newPassword" />
+
+            @if (f.newPassword.touched && f.newPassword.invalid) {
+              <mat-error>
+                @switch (true) {
+                  @case (f.newPassword.hasError('required')) {
+                    {{ 'PASSWORD_REQUIRED' | translate }}
+                  }
+                  @case (f.newPassword.hasError('minlength')) {
+                    {{ 'PASSWORD_MIN_LENGTH' | translate }}
+                  }
+                  @case (f.newPassword.hasError('pattern')) {
+                    {{ 'PASSWORD_PATTERN' | translate }}
+                  }
+                }
+              </mat-error>
             }
           </mat-form-field>
-          <mat-form-field>
+
+          <!-- CONFIRM PASSWORD -->
+          <mat-form-field appearance="outline">
             <mat-label>{{ 'CONFIRM_PASSWORD' | translate }}</mat-label>
-            <input matInput [formControl]="newPassword2" (blur)="updateErrorMessage2()" required />
-            @if (newPassword2.invalid) {
-              <mat-error>{{ errorMessage2() }}</mat-error>
+            <input matInput type="password" formControlName="confirmPassword" />
+
+            @if (f.confirmPassword.touched && f.confirmPassword.hasError('passwordMismatch')) {
+              <mat-error>
+                {{ 'PASSWORDS_DO_NOT_MATCH' | translate }}
+              </mat-error>
             }
           </mat-form-field>
-          <a matFab extended href="/login">
+
+          <!-- SUBMIT -->
+          <button mat-raised-button color="primary" type="submit">
             <mat-icon>password</mat-icon>
             {{ 'CHANGE_PASSWORD' | translate }}
-          </a>
-        </div>
+          </button>
+        </form>
       </mat-card-content>
     </mat-card>
+
+    <!-- DELETE ACCOUNT -->
     <mat-card appearance="outlined">
       <mat-card-content>
         <div class="flex flex-col gap-4">
@@ -42,10 +81,11 @@
               {{ 'DELETE_ACCOUNT_DESC' | translate }}
             </p>
           </div>
-          <a matFab extended (click)="openDeleteDialog()">
+
+          <button mat-raised-button color="warn" (click)="openDeleteDialog()">
             <mat-icon>delete</mat-icon>
             {{ 'DELETE_ACCOUNT' | translate }}
-          </a>
+          </button>
         </div>
       </mat-card-content>
     </mat-card>

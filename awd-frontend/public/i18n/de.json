@@ -81,5 +81,5 @@
   "PASSWORD_MIN_LENGTH": "Mindestens 8 Zeichen erforderlich",
   "PASSWORD_PATTERN": "Großbuchstabe und Zahl erforderlich",
   "EMAIL_ALREADY_REGISTERED": "E-Mail bereits registriert",
-  "USERNAME_ALREADY_TAKEN": "Benutzername bereits vergeben"
+  "PASSWORDS_DO_NOT_MATCH": "Passwörter stimmen nicht überein"
 }
