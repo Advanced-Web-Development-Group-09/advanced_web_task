@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Sidenav } from '../../shared/sidenav/sidenav';
@@ -8,6 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { WrongFileTypeDialog } from '../../dialogs/upload_dialog/wrong-file-type-dialog/wrong-file-type-dialog';
 
 export interface DatasetElement {
   name: string;
@@ -59,6 +67,9 @@ const EXPORTED_DATA: DatasetElement[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Datasets implements AfterViewInit {
+  // Dialog Logic
+  readonly dialog = inject(MatDialog);
+
   // Table Logic
   displayedColumns: string[] = ['name', 'size', 'date', 'button'];
 
@@ -100,7 +111,7 @@ export class Datasets implements AfterViewInit {
         !file.name.endsWith('.xlsx') &&
         !file.name.endsWith('.json')
       ) {
-        alert('Only CSV, XLSX, and JSON files allowed');
+        this.dialog.open(WrongFileTypeDialog);
         return;
       }
       this.handleFile(file);
@@ -117,7 +128,7 @@ export class Datasets implements AfterViewInit {
         !file.name.endsWith('.xlsx') &&
         !file.name.endsWith('.json')
       ) {
-        alert('Only CSV, XLSX, and JSON files allowed');
+        this.dialog.open(WrongFileTypeDialog);
         return;
       }
       this.handleFile(file);

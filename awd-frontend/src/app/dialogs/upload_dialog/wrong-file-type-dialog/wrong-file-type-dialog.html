@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Invalid File Type</h2>
+<mat-dialog-content>
+  <div class="flex flex-col gap-4">
+    <p class="text-lg" style="color: var(--mat-sys-on-surface)">
+      The selected file cannot be processed!
+    </p>
+    <div class="pt-2">
+      <p class="mb-2 text-base" style="color: var(--mat-sys-on-surface-variant)">
+        Accepted formats:
+      </p>
+      <p class="ml-4 font-medium text-base" style="color: var(--mat-sys-on-surface)">
+        CSV, XLSX and JSON
+      </p>
+    </div>
+    <p class="pt-2 text-base" style="color: var(--mat-sys-on-surface-variant)">
+      Please verify your file type and try again.
+    </p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close cdkFocusInitial>Close</button>
+</mat-dialog-actions>
