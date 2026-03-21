@@ -1,4 +1,5 @@
 .devcontainer/
+.backend/.venv/
 
 backend/sql_app.db
 backend/.venv/
