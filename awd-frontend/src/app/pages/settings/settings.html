@@ -7,18 +7,18 @@
       <mat-card-content>
         <div class="flex flex-col gap-4">
           <mat-form-field>
-            <mat-label>Old Password</mat-label>
+            <mat-label>{{ 'OLD_PASSWORD' | translate }}</mat-label>
             <input matInput />
           </mat-form-field>
           <mat-form-field>
-            <mat-label>New Password</mat-label>
+            <mat-label>{{ 'NEW_PASSWORD' | translate }}</mat-label>
             <input matInput [formControl]="newPassword1" (blur)="updateErrorMessage1()" required />
             @if (newPassword1.invalid) {
               <mat-error>{{ errorMessage1() }}</mat-error>
             }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>New Password</mat-label>
+            <mat-label>{{ 'CONFIRM_PASSWORD' | translate }}</mat-label>
             <input matInput [formControl]="newPassword2" (blur)="updateErrorMessage2()" required />
             @if (newPassword2.invalid) {
               <mat-error>{{ errorMessage2() }}</mat-error>
@@ -26,7 +26,7 @@
           </mat-form-field>
           <a matFab extended href="/login">
             <mat-icon>password</mat-icon>
-            Change Password
+            {{ 'CHANGE_PASSWORD' | translate }}
           </a>
         </div>
       </mat-card-content>
@@ -36,13 +36,15 @@
         <div class="flex flex-col gap-4">
           <div class="flex flex-col items-center">
             <p class="font-medium" style="color: var(--mat-sys-error); width: fit-content">
-              Delete my account
+              {{ 'DELETE_ACCOUNT_TITLE' | translate }}
             </p>
-            <p style="color: var(--mat-sys-on-surface)">Permanently delete the account</p>
+            <p style="color: var(--mat-sys-on-surface)">
+              {{ 'DELETE_ACCOUNT_DESC' | translate }}
+            </p>
           </div>
           <a matFab extended href="/login">
             <mat-icon>delete</mat-icon>
-            Delete Account
+            {{ 'DELETE_ACCOUNT' | translate }}
           </a>
         </div>
       </mat-card-content>

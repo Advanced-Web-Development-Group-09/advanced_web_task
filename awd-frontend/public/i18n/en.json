@@ -48,6 +48,12 @@
   "LOGIN_INFO": "Login now!",
   "ALREADY_HAVE_ACCOUNT": "Already have an account?",
   "STATUSPOINTS": "Status Points",
+  "OLD_PASSWORD": "Old Password",
+  "NEW_PASSWORD": "New Password",
+  "CONFIRM_PASSWORD": "Confirm Password",
+  "DELETE_ACCOUNT_TITLE": "Delete my Account",
+  "DELETE_ACCOUNT_DESC": "Permanently delete the account",
+  "DELETE_ACCOUNT": "Delete Account",
   "PAGINATOR": {
     "FIRST_PAGE": "First page",
     "ITEMS_PER_PAGE": "Items per page",

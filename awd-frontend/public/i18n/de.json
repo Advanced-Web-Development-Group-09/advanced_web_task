@@ -48,6 +48,12 @@
   "LOGIN_INFO": "Jetzt anmelden!",
   "ALREADY_HAVE_ACCOUNT": "Sie haben bereits ein Konto?",
   "STATUSPOINTS": "Statuspunkte",
+  "OLD_PASSWORD": "Altes Passwort",
+  "NEW_PASSWORD": "Neues Passwort",
+  "CONFIRM_PASSWORD": "Passwort bestätigen",
+  "DELETE_ACCOUNT_TITLE": "Mein Konto löschen",
+  "DELETE_ACCOUNT_DESC": "Das Konto dauerhaft löschen",
+  "DELETE_ACCOUNT": "Konto löschen",
   "PAGINATOR": {
     "FIRST_PAGE": "Erste Seite",
     "ITEMS_PER_PAGE": "Elemente pro Seite",

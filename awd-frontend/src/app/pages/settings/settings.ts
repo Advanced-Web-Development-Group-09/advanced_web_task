@@ -1,20 +1,33 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {Sidenav} from '../../shared/sidenav/sidenav';
-import {MatCardModule} from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { Sidenav } from '../../shared/sidenav/sidenav';
+import { MatCardModule } from '@angular/material/card';
 
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {merge} from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { merge } from 'rxjs';
 
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings',
-  imports: [MatSidenavModule, Sidenav, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatSidenavModule,
+    Sidenav,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    TranslatePipe,
+  ],
   templateUrl: './settings.html',
   styleUrl: './settings.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +52,8 @@ export class Settings {
   updateErrorMessage1() {
     if (this.newPassword1.hasError('required')) {
       this.errorMessage1.set('You must enter a value');
-    } else if (this.newPassword1.hasError('email')) { // CHANGE THIS TO PATTERN ERROR OR WHATEVER
+    } else if (this.newPassword1.hasError('email')) {
+      // CHANGE THIS TO PATTERN ERROR OR WHATEVER
       this.errorMessage1.set('Not a valid password');
     } else {
       this.errorMessage1.set('');
@@ -49,7 +63,8 @@ export class Settings {
   updateErrorMessage2() {
     if (this.newPassword2.hasError('required')) {
       this.errorMessage2.set('You must enter a value');
-    } else if (this.newPassword2.hasError('email')) { // CHANGE THIS TO PATTERN ERROR OR WHATEVER
+    } else if (this.newPassword2.hasError('email')) {
+      // CHANGE THIS TO PATTERN ERROR OR WHATEVER
       this.errorMessage2.set('Not a valid password');
     } else {
       this.errorMessage2.set('');
