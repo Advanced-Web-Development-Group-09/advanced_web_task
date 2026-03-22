@@ -4,17 +4,46 @@
 }
 
 .mat-drawer-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  align-items: start;
   padding: 4rem;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .mat-mdc-card-title {
   margin-top: 1rem;
   margin-left: 1rem;
+  margin-bottom: 1rem;
 }
 
 .mat-mdc-form-field {
   width: 100%;
+}
+
+form {
+  width: 100%;
+}
+
+@keyframes fadeInSlideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeInSlideUp 0.6s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.result-container {
+  /* Standard MD3 elevation/tonal container fallback */
+  background-color: var(--mat-sys-secondary-container, #e2e8f0);
+  color: var(--mat-sys-on-secondary-container, #0f172a);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .result-container {
+    background-color: var(--mat-sys-secondary-container, #1e293b);
+    color: var(--mat-sys-on-secondary-container, #f8fafc);
+  }
 }

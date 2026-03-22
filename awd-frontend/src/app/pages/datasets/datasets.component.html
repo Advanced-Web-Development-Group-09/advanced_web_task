@@ -1,0 +1,41 @@
+<div class="datasets-container">
+  <h2>Train Datasets</h2>
+
+  <div class="actions" style="margin-bottom: 20px">
+    <label for="csvUpload">Upload Train Data (CSV):</label>
+    <input id="csvUpload" type="file" (change)="onFileUpload($event)" accept=".csv" />
+
+    <button (click)="downloadCsv()" style="margin-left: 10px">Download Filtered CSV</button>
+  </div>
+
+  <!-- Progress Bar UI -->
+  <div *ngIf="isUploading" style="margin-bottom: 20px">
+    <p>Uploading and processing dataset: {{ uploadProgress }}%</p>
+    <progress [value]="uploadProgress" max="100" style="width: 100%"></progress>
+  </div>
+
+  <div *ngIf="isLoading">Loading datasets...</div>
+
+  <table style="width: 100%; border-collapse: collapse" *ngIf="!isLoading && trains.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Source Station</th>
+        <th>Destination Station</th>
+        <th>Departure</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let train of trains">
+        <td>{{ train.id }}</td>
+        <td>{{ train.source }}</td>
+        <td>{{ train.destination }}</td>
+        <td>{{ train.departure_time | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading && trains.length === 0">
+    No train data available. Please upload a dataset to begin.
+  </div>
+</div>
