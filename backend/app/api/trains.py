@@ -11,6 +11,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, Depends, Backgro
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from pydantic import BaseModel
 
 from app.database import get_db, SessionLocal
 from app.models import Train, User
@@ -170,6 +171,49 @@ async def get_trains(
         "items": trains
     }
 
+@router.get("/two")
+async def get_trains_2(
+    search: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    # Enforce maximum query limit to prevent DoS/abuse via oversized requests
+    MAX_LIMIT = 500
+    limit = min(limit, MAX_LIMIT)
+
+    query = db.query(Train)
+
+    # Apply search filter across multiple fields if provided
+    if search:
+        search = search.strip()
+        query = query.filter(
+            or_(
+                Train.id.ilike(f"%{search}%"),
+                Train.station.ilike(f"%{search}%"),
+                Train.city.ilike(f"%{search}%"),
+                Train.journey_id.ilike(f"%{search}%"),
+            )
+        )
+
+    # Count total matching records after search filters applied
+    total_count = query.count()
+
+    # Apply consistent sorting and pagination to results
+    trains = (
+        query
+        .order_by(Train.id.asc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    return {
+        "total": total_count,
+        "items": trains,
+    }
+
 @router.post("/upload")
 async def upload_train_data(
     background_tasks: BackgroundTasks,
@@ -290,3 +334,104 @@ async def get_train_by_id(train_id: str, db: Session = Depends(get_db), current_
     if not train:
         raise HTTPException(status_code=404, detail="Train not found")
     return train
+
+class ExportRequest(BaseModel):
+    ids: List[int]
+
+@router.post("/download/csv/two")
+async def download_trains_csv_2(
+    request: ExportRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Export selected trains as CSV (full schema).
+    """
+
+    if not request.ids:
+        raise HTTPException(status_code=400, detail="No IDs provided")
+
+    query = db.query(Train).filter(Train.id.in_(request.ids))
+
+    # Export history
+    user_exports[current_user.id].append(
+        {
+            "filters": f"{len(request.ids)} selected IDs",
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+    )
+    user_exports[current_user.id] = user_exports[current_user.id][-50:]
+
+    def iter_csv():
+        output = io.StringIO()
+        writer = csv.writer(output)
+
+        # Header (FULL schema)
+        writer.writerow(
+            [
+                "id",
+                "journey_id",
+                "line",
+                "eva_nr",
+                "category",
+                "path",
+                "station",
+                "state",
+                "city",
+                "zip_code",
+                "longitude",
+                "latitude",
+                "arrival_plan",
+                "departure_plan",
+                "arrival_change",
+                "departure_change",
+                "delay_m",
+                "delay_check",
+                "info",
+                "upload_batch",
+                "uploader_id",
+            ]
+        )
+        yield output.getvalue()
+        output.seek(0)
+        output.truncate(0)
+
+        # Rows
+        for train in query.yield_per(1000):
+            writer.writerow(
+                [
+                    train.id,
+                    train.journey_id,
+                    train.line,
+                    train.eva_nr,
+                    train.category,
+                    train.path,
+                    train.station,
+                    train.state,
+                    train.city,
+                    train.zip_code,
+                    train.longitude,
+                    train.latitude,
+                    train.arrival_plan,
+                    train.departure_plan,
+                    train.arrival_change,
+                    train.departure_change,
+                    train.delay_m,
+                    train.delay_check,
+                    train.info,
+                    train.upload_batch,
+                    train.uploader_id,
+                ]
+            )
+            yield output.getvalue()
+            output.seek(0)
+            output.truncate(0)
+
+    return StreamingResponse(
+        iter_csv(),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=selected_trains.csv"
+        },
+    )
+

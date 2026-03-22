@@ -11,6 +11,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from './shared/custom-paginator-intl/custom-paginator-intl';
 import { withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [

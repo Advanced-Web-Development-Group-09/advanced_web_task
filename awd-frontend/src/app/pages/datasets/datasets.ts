@@ -3,7 +3,7 @@ import {
   Component,
   inject,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { WrongFileTypeDialog } from '../../dialogs/wrong-file-type-dialog/wrong-file-type-dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TrainService } from './train.service';
+import { TrainService } from '../../services/train/train.service';
 import { timer, Subscription } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import { HttpEventType } from '@angular/common/http';
@@ -60,7 +60,7 @@ export class Datasets implements OnInit {
   ngOnInit() {
     this.loadDatasets();
     this.loadExports();
-    
+
     const savedTaskId = localStorage.getItem('upload_task_id');
     if (savedTaskId) {
       this.isUploading = true;
@@ -74,7 +74,7 @@ export class Datasets implements OnInit {
         this.dataSourceDatasets.data = data;
         this.cdr.markForCheck();
       },
-      error: (err: any) => console.error('Failed to load datasets', err)
+      error: (err: any) => console.error('Failed to load datasets', err),
     });
   }
 
@@ -84,7 +84,7 @@ export class Datasets implements OnInit {
         this.dataSourceExports.data = data;
         this.cdr.markForCheck();
       },
-      error: (err: any) => console.error('Failed to load export history', err)
+      error: (err: any) => console.error('Failed to load export history', err),
     });
   }
 
@@ -162,7 +162,9 @@ export class Datasets implements OnInit {
     this.trainService.uploadTrainData(file).subscribe({
       next: (response: any) => {
         if (response.type === HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * response.loaded / (response.total || response.loaded));
+          this.uploadProgress = Math.round(
+            (100 * response.loaded) / (response.total || response.loaded),
+          );
           this.cdr.markForCheck();
         } else if (response.type === HttpEventType.Response) {
           const taskId = response.body.task_id;
@@ -177,41 +179,43 @@ export class Datasets implements OnInit {
         localStorage.removeItem('upload_task_id');
         alert('File upload failed.');
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
   pollUploadStatus(taskId: string): void {
     this.uploadStatusText = 'Processing Dataset in Background...';
-    this.pollingSubscription = timer(0, 500).pipe(
-      switchMap(() => this.trainService.getUploadStatus(taskId)),
-      takeWhile((res: any) => res.status !== 'completed' && res.status !== 'failed', true)
-    ).subscribe({
-      next: (res: any) => {
-        this.uploadProgress = Math.round(res.progress_percentage || 0);
-        this.cdr.markForCheck();
-        if (res.status === 'completed') {
+    this.pollingSubscription = timer(0, 500)
+      .pipe(
+        switchMap(() => this.trainService.getUploadStatus(taskId)),
+        takeWhile((res: any) => res.status !== 'completed' && res.status !== 'failed', true),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.uploadProgress = Math.round(res.progress_percentage || 0);
+          this.cdr.markForCheck();
+          if (res.status === 'completed') {
+            this.isUploading = false;
+            this.uploadedFiles = [];
+            this.uploadStatusText = '';
+            localStorage.removeItem('upload_task_id');
+            this.loadDatasets();
+            alert('Dataset successfully processed!');
+          } else if (res.status === 'failed') {
+            this.isUploading = false;
+            this.uploadStatusText = '';
+            localStorage.removeItem('upload_task_id');
+            alert('Error processing the dataset.');
+          }
+          this.cdr.markForCheck();
+        },
+        error: () => {
           this.isUploading = false;
-          this.uploadedFiles = [];
           this.uploadStatusText = '';
           localStorage.removeItem('upload_task_id');
-          this.loadDatasets();
-          alert('Dataset successfully processed!');
-        } else if (res.status === 'failed') {
-          this.isUploading = false;
-          this.uploadStatusText = '';
-          localStorage.removeItem('upload_task_id');
-          alert('Error processing the dataset.');
-        }
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.isUploading = false;
-        this.uploadStatusText = '';
-        localStorage.removeItem('upload_task_id');
-        this.cdr.markForCheck();
-      }
-    });
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   downloadCsv(): void {
@@ -225,7 +229,7 @@ export class Datasets implements OnInit {
         window.URL.revokeObjectURL(url);
         this.loadExports();
       },
-      error: (err: any) => console.error('Download failed', err)
+      error: (err: any) => console.error('Download failed', err),
     });
   }
 
@@ -234,7 +238,7 @@ export class Datasets implements OnInit {
       next: () => {
         this.loadDatasets();
       },
-      error: (err: any) => console.error('Failed to delete dataset', err)
+      error: (err: any) => console.error('Failed to delete dataset', err),
     });
   }
 }

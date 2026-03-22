@@ -20,7 +20,7 @@ export interface TrainResponse {
   providedIn: 'root',
 })
 export class TrainService {
-  private readonly apiUrl = 'http://localhost:8000/api/trains';
+  private readonly apiUrl = 'http://127.0.0.1:8000/api/trains';
 
   constructor(private http: HttpClient) {}
 
@@ -38,7 +38,7 @@ export class TrainService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get<TrainResponse>(this.apiUrl, {
+    return this.http.get<TrainResponse>('http://127.0.0.1:8000/api/trains/two', {
       params,
       headers,
     });
@@ -53,7 +53,7 @@ export class TrainService {
     });
 
     return this.http.post(
-      `${this.apiUrl}/download/csv`,
+      `${this.apiUrl}/download/csv/two`,
       { ids },
       {
         headers,
@@ -76,7 +76,7 @@ export class TrainService {
   }
 
   getExports(): Observable<any> {
-    return this.http.get('http://localhost:8000/api/users/me/exports');
+    return this.http.get('http://127.0.0.1:8000/api/users/me/exports');
   }
 
   getUploadedDatasets(): Observable<any> {
