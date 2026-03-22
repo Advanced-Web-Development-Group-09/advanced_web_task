@@ -12,11 +12,11 @@
                 class="flex items-center justify-center rounded-full text-3xl w-14 h-14"
                 style="background-color: var(--mat-sys-surface-variant)"
               >
-                D
+                {{ topUsers[1]?.username?.[0] | uppercase }}
               </div>
               <div class="flex flex-col w-fit items-center">
-                <p class="text-xl font-medium w-fit">Danny Noppert</p>
-                <p class="w-fit">70 {{ 'POINTS' | translate }}</p>
+                <p class="text-xl font-medium w-fit">{{ topUsers[1]?.username }}</p>
+                <p class="w-fit">{{ topUsers[1]?.points }} {{ 'POINTS' | translate }}</p>
               </div>
             </div>
             <div
@@ -32,11 +32,11 @@
                 class="flex items-center justify-center rounded-full text-3xl w-14 h-14"
                 style="background-color: var(--mat-sys-surface-variant)"
               >
-                N
+                {{ topUsers[0]?.username?.[0] | uppercase }}
               </div>
               <div class="flex flex-col w-fit items-center">
-                <p class="text-xl font-medium w-fit">NormalErik</p>
-                <p class="w-fit">100 {{ 'POINTS' | translate }}</p>
+                <p class="text-xl font-medium w-fit">{{ topUsers[0]?.username }}</p>
+                <p class="w-fit">{{ topUsers[0]?.points }} {{ 'POINTS' | translate }}</p>
               </div>
             </div>
             <div
@@ -52,11 +52,11 @@
                 class="flex items-center justify-center rounded-full text-3xl w-14 h-14"
                 style="background-color: var(--mat-sys-surface-variant)"
               >
-                S
+                {{ topUsers[2]?.username?.[0] | uppercase }}
               </div>
               <div class="flex flex-col w-fit items-center">
-                <p class="text-xl font-medium w-fit">Stephen Bunting</p>
-                <p class="w-fit">30 {{ 'POINTS' | translate }}</p>
+                <p class="text-xl font-medium w-fit">{{ topUsers[2]?.username }}</p>
+                <p class="w-fit">{{ topUsers[2]?.points }} {{ 'POINTS' | translate }}</p>
               </div>
             </div>
             <div
@@ -79,7 +79,7 @@
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>{{ 'NAME' | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.username }}</td>
           </ng-container>
 
           <ng-container matColumnDef="points">

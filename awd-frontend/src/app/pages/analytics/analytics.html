@@ -6,8 +6,8 @@
     <mat-card appearance="outlined">
       <mat-card-title>{{ 'TRAIN_CANCELLATION_ODDS' | translate }}</mat-card-title>
       <mat-card-content>
-        <div class="flex flex-col items-center gap-4">
-          <form>
+        <div class="flex flex-col items-center w-full">
+          <form class="flex flex-col gap-2 w-full">
             <mat-form-field>
               <mat-label>{{ 'START_STATION' | translate }}</mat-label>
               <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" />
@@ -17,8 +17,6 @@
                 }
               </mat-autocomplete>
             </mat-form-field>
-          </form>
-          <form>
             <mat-form-field>
               <mat-label>{{ 'END_STATION' | translate }}</mat-label>
               <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" />
@@ -29,29 +27,53 @@
               </mat-autocomplete>
             </mat-form-field>
           </form>
-          <button matFab extended>
+          <button matFab extended color="primary" class="mt-4" (click)="startCancellationOdds()" [disabled]="cancellationLoading || !myControl.value || !myControl2.value">
             <mat-icon>calculate</mat-icon>
             {{ 'START_CALCULATION' | translate }}
           </button>
+
+          <mat-progress-bar *ngIf="cancellationLoading" mode="determinate" [value]="cancellationProgress" class="w-full mt-6 rounded-full"></mat-progress-bar>
+          
+          <div *ngIf="cancellationResult" class="result-container fade-in mt-6 p-6 rounded-2xl w-full flex flex-col items-center gap-1 text-center">
+             <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest mb-2">{{ 'RESULTS' | translate }}</h3>
+             <p class="text-5xl font-extrabold text-primary">{{ cancellationResult.cancellation_odds | number:'1.1-2' }}%</p>
+             <p class="text-base font-medium opacity-90 mt-2">{{ 'CHANCE_OF_CANCELLATION' | translate }}</p>
+             <mat-divider class="w-full my-4"></mat-divider>
+             <p class="text-sm opacity-70">{{ 'BASED_ON_A_TOTAL_OF' | translate }} {{ cancellationResult.total_trains }} {{ 'RECORDED_TRAINS' | translate }}.</p>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined">
       <mat-card-title>{{ 'DELAY_STATISTICS' | translate }}</mat-card-title>
       <mat-card-content>
-        <div class="flex flex-col items-center">
-          <button matFab extended>
+        <div class="flex flex-col items-center w-full h-full justify-center">
+          <button matFab extended color="primary" class="mt-4 mb-4" (click)="startDelayStatistics()" [disabled]="reasonsLoading">
             <mat-icon>calculate</mat-icon>
             {{ 'START_CALCULATION' | translate }}
           </button>
+
+          <mat-progress-bar *ngIf="reasonsLoading" mode="determinate" [value]="reasonsProgress" class="w-full mt-2 rounded-full"></mat-progress-bar>
+          
+          <div *ngIf="reasonsResult" class="result-container fade-in mt-4 p-4 rounded-2xl w-full flex flex-col">
+            <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest text-center mb-2 mt-2">{{ 'TOP_DELAY_REASONS' | translate }}</h3>
+            <mat-list class="bg-transparent w-full">
+              <mat-list-item *ngFor="let reason of reasonsResult; let i = index">
+                <div matListItemAvatar class="flex items-center justify-center rounded-full bg-slate-400 dark:bg-slate-700 text-white font-bold h-10 w-10">
+                  {{ i + 1 }}
+                </div>
+                <span matListItemTitle class="font-medium text-base ml-2 whitespace-normal break-words">{{ reason | translate }}</span>
+              </mat-list-item>
+            </mat-list>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
     <mat-card appearance="outlined">
       <mat-card-title>{{ 'AVERAGE_STATE_DELAY' | translate }}</mat-card-title>
       <mat-card-content>
-        <div class="flex flex-col items-center gap-4">
-          <form>
+        <div class="flex flex-col items-center w-full">
+          <form class="flex flex-col gap-2 w-full">
             <mat-form-field>
               <mat-label>{{ 'STATE' | translate }}</mat-label>
               <input
@@ -67,10 +89,21 @@
               </mat-autocomplete>
             </mat-form-field>
           </form>
-          <button matFab extended>
+          <button matFab extended color="primary" class="mt-4" (click)="startAverageStateDelay()" [disabled]="delayLoading || !myControl3.value">
             <mat-icon>calculate</mat-icon>
             {{ 'START_CALCULATION' | translate }}
           </button>
+
+          <mat-progress-bar *ngIf="delayLoading" mode="determinate" [value]="delayProgress" class="w-full mt-6 rounded-full"></mat-progress-bar>
+          
+          <div *ngIf="delayResult" class="result-container fade-in mt-6 p-6 rounded-2xl w-full flex flex-col items-center gap-1 text-center">
+             <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest mb-2">{{ delayResult.bundesland }}</h3>
+             <p class="text-5xl font-extrabold text-primary flex items-baseline gap-2">
+               {{ delayResult.average_delay_minutes | number:'1.1-1' }}
+               <span class="text-2xl font-medium opacity-80">{{ 'MINUTES_SHORT' | translate }}</span>
+             </p>
+             <p class="text-base font-medium opacity-90 mt-2">{{ 'AVERAGE_DELAY_TIME' | translate }}</p>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>

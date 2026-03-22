@@ -1,0 +1,26 @@
+{
+  "TRAIN_CANCELLATION_ODDS": "Train Cancellation Odds",
+  "START_STATION": "Start Station",
+  "END_STATION": "End Station",
+  "DELAY_STATISTICS": "Delay Statistics",
+  "START_CALCULATION": "Start Calculation",
+  "RESULTS": "Results",
+  "CHANCE_OF_CANCELLATION": "Chance of Cancellation",
+  "BASED_ON_A_TOTAL_OF": "Based on a total of",
+  "RECORDED_TRAINS": "recorded trains",
+  
+  "TOP_DELAY_REASONS": "Top Delay Reasons",
+  "WEATHER_CONDITIONS": "Weather Conditions",
+  "SIGNAL_FAILURE": "Signal Failure",
+  "STAFF_SHORTAGE": "Staff Shortage",
+  "TRACK_MAINTENANCE": "Track Maintenance",
+  "TRAIN_DEFECT": "Train Defect",
+
+  "AVERAGE_STATE_DELAY": "Average State Delay",
+  "STATE": "State",
+  "MINUTES_SHORT": "min",
+  "AVERAGE_DELAY_TIME": "Average Delay Time",
+  "POINTS": "Points",
+  "PLACE": "Place",
+  "NAME": "Name"
+}

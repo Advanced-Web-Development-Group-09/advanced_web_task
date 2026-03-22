@@ -170,16 +170,6 @@ async def get_trains(
         "items": trains
     }
 
-@router.get("/{train_id}")
-async def get_train_by_id(train_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """
-    Get details for a specific train.
-    """
-    train = db.query(Train).filter(Train.journey_id == train_id).first()
-    if not train:
-        raise HTTPException(status_code=404, detail="Train not found")
-    return train
-
 @router.post("/upload")
 async def upload_train_data(
     background_tasks: BackgroundTasks,
@@ -290,3 +280,13 @@ async def download_trains_csv(
             output.truncate(0)
             
     return StreamingResponse(iter_csv(), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=filtered_trains.csv"})
+
+@router.get("/{train_id}")
+async def get_train_by_id(train_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Get details for a specific train.
+    """
+    train = db.query(Train).filter(Train.journey_id == train_id).first()
+    if not train:
+        raise HTTPException(status_code=404, detail="Train not found")
+    return train

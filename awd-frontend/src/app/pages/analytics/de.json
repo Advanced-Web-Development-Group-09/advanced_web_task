@@ -1,0 +1,26 @@
+{
+  "TRAIN_CANCELLATION_ODDS": "Wahrscheinlichkeit von Zugausfällen",
+  "START_STATION": "Startstation",
+  "END_STATION": "Endstation",
+  "DELAY_STATISTICS": "Verspätungsstatistiken",
+  "START_CALCULATION": "Berechnung starten",
+  "RESULTS": "Ergebnisse",
+  "CHANCE_OF_CANCELLATION": "Ausfallwahrscheinlichkeit",
+  "BASED_ON_A_TOTAL_OF": "Basierend auf insgesamt",
+  "RECORDED_TRAINS": "erfassten Zügen",
+  
+  "TOP_DELAY_REASONS": "Häufigste Verspätungsgründe",
+  "WEATHER_CONDITIONS": "Wetterbedingungen",
+  "SIGNAL_FAILURE": "Signalstörung",
+  "STAFF_SHORTAGE": "Personalmangel",
+  "TRACK_MAINTENANCE": "Gleisarbeiten",
+  "TRAIN_DEFECT": "Zugdefekt",
+
+  "AVERAGE_STATE_DELAY": "Durchschnittliche Verspätung pro Bundesland",
+  "STATE": "Bundesland",
+  "MINUTES_SHORT": "Min",
+  "AVERAGE_DELAY_TIME": "Durchschnittliche Verspätungszeit",
+  "POINTS": "Punkte",
+  "PLACE": "Platz",
+  "NAME": "Name"
+}
