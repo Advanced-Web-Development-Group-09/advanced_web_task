@@ -63,9 +63,7 @@
     </a>
     <a
       matButton
-      routerLink="/login"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="logout()"
     >
       <mat-icon>logout</mat-icon>
       {{ 'LOGOUT' | translate }}
