@@ -125,42 +125,149 @@
                 class="example-element-detail-wrapper"
                 [class.example-element-detail-wrapper-expanded]="isExpanded(element)"
               >
-                <div class="example-element-detail mtpl-20">
-                  <div class="grid grid-cols-2 gap-4">
-                    <!-- Basic -->
-                    <div><strong>ID:</strong> {{ element.id }}</div>
-                    <div><strong>Journey:</strong> {{ element.journey_id }}</div>
-
-                    <div><strong>Line:</strong> {{ element.line }}</div>
-                    <div><strong>Category:</strong> {{ element.category }}</div>
+                <div
+                  class="example-element-detail mtpl-20"
+                  [style.background-color]="'var(--mat-sys-surface)'"
+                >
+                  <div class="space-y-6">
+                    <!-- Basic Info -->
+                    <div>
+                      <h3
+                        class="text-sm font-semibold uppercase mb-2"
+                        [style.color]="'var(--mat-sys-outline)'"
+                      >
+                        {{ 'BASIC' | translate }}
+                      </h3>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <span class="font-medium">{{ 'ID' | translate }}:</span> {{ element.id }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'JOURNEY' | translate }}:</span>
+                          {{ element.journey_id }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'LINE' | translate }}:</span>
+                          {{ element.line }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'CATEGORY' | translate }}:</span>
+                          {{ element.category }}
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- Location -->
-                    <div><strong>Station:</strong> {{ element.station }}</div>
-                    <div><strong>City:</strong> {{ element.city }}</div>
-
-                    <div><strong>State:</strong> {{ element.state }}</div>
-                    <div><strong>ZIP:</strong> {{ element.zip_code }}</div>
-
-                    <div><strong>Latitude:</strong> {{ element.latitude }}</div>
-                    <div><strong>Longitude:</strong> {{ element.longitude }}</div>
+                    <div>
+                      <h3
+                        class="text-sm font-semibold uppercase mb-2"
+                        [style.color]="'var(--mat-sys-outline)'"
+                      >
+                        {{ 'LOCATION' | translate }}
+                      </h3>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <span class="font-medium">{{ 'STATION' | translate }}:</span>
+                          {{ element.station }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'CITY' | translate }}:</span>
+                          {{ element.city }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'STATE' | translate }}:</span>
+                          {{ element.state }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'ZIP' | translate }}:</span>
+                          {{ element.zip_code }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'LATITUDE' | translate }}:</span>
+                          {{ element.latitude }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'LONGITUDE' | translate }}:</span>
+                          {{ element.longitude }}
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- Timing -->
-                    <div><strong>Arrival (Planned):</strong> {{ element.arrival_plan }}</div>
-                    <div><strong>Departure (Planned):</strong> {{ element.departure_plan }}</div>
-
-                    <div><strong>Arrival (Actual):</strong> {{ element.arrival_change }}</div>
-                    <div><strong>Departure (Actual):</strong> {{ element.departure_change }}</div>
+                    <div>
+                      <h3
+                        class="text-sm font-semibold uppercase mb-2"
+                        [style.color]="'var(--mat-sys-outline)'"
+                      >
+                        {{ 'TIMING' | translate }}
+                      </h3>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <span class="font-medium">{{ 'ARRIVAL_PLANNED' | translate }}:</span>
+                          {{ element.arrival_plan }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'DEPARTURE_PLANNED' | translate }}:</span>
+                          {{ element.departure_plan }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'ARRIVAL_ACTUAL' | translate }}:</span>
+                          {{ element.arrival_change }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'DEPARTURE_ACTUAL' | translate }}:</span>
+                          {{ element.departure_change }}
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- Delay -->
-                    <div><strong>Delay (min):</strong> {{ element.delay_m }}</div>
-                    <div><strong>Delay Checked:</strong> {{ element.delay_check }}</div>
+                    <div>
+                      <h3
+                        class="text-sm font-semibold uppercase mb-2"
+                        [style.color]="'var(--mat-sys-outline)'"
+                      >
+                        {{ 'DELAY' | translate }}
+                      </h3>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <span class="font-medium">{{ 'DELAY_MIN' | translate }}:</span>
+                          {{ element.delay_m }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'CHECKED' | translate }}:</span>
+                          {{ element.delay_check }}
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- Misc -->
-                    <div><strong>Path:</strong> {{ element.path }}</div>
-                    <div><strong>Info:</strong> {{ element.info }}</div>
-
-                    <div><strong>Upload Batch:</strong> {{ element.upload_batch }}</div>
-                    <div><strong>Uploader:</strong> {{ element.uploader_id }}</div>
+                    <div>
+                      <h3
+                        class="text-sm font-semibold uppercase mb-2"
+                        [style.color]="'var(--mat-sys-outline)'"
+                      >
+                        {{ 'MISC' | translate }}
+                      </h3>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <span class="font-medium">{{ 'PATH' | translate }}:</span>
+                          {{ element.path }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'INFO' | translate }}:</span>
+                          {{ element.info }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'UPLOAD_BATCH' | translate }}:</span>
+                          {{ element.upload_batch }}
+                        </div>
+                        <div>
+                          <span class="font-medium">{{ 'UPLOADER' | translate }}:</span>
+                          {{ element.uploader_id }}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
