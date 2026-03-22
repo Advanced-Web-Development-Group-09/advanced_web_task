@@ -7,9 +7,10 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { Datasets } from '../../pages/datasets/datasets';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Settings } from '../../pages/settings/settings';
+import { UserService } from '../../services/user/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-deletion-dialog',
@@ -26,9 +27,22 @@ import { Settings } from '../../pages/settings/settings';
 })
 export class ConfirmDeletionDialog {
   readonly dialogRef = inject(MatDialogRef<Settings>);
+  readonly router = inject(Router);
+  readonly userService = inject(UserService);
 
   onConfirm() {
-    // Handle confirmation logic here
-    this.dialogRef.close(true); // Pass true to indicate confirmation
+    this.userService.deleteUserProfile().subscribe({
+      next: (response) => {
+        console.log('User profile deleted successfully:', response);
+        this.router.navigate(['/registration']);
+      },
+      error: (error) => {
+        console.error('Error deleting user profile:', error);
+      },
+    });
+
+    this.dialogRef.close(true);
+
+    localStorage.removeItem('token');
   }
 }

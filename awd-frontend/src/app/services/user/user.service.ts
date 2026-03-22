@@ -12,6 +12,7 @@ export interface PasswordChangePayload {
 })
 export class UserService {
   private apiUrl = 'http://127.0.0.1:8000/api/users/me/password';
+  private apiUrl2 = 'http://127.0.0.1:8000/api/users/me';
 
   constructor(private http: HttpClient) {}
 
@@ -24,5 +25,15 @@ export class UserService {
     });
 
     return this.http.put(this.apiUrl, data, { headers });
+  }
+
+  deleteUserProfile(): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.delete(this.apiUrl2, { headers });
   }
 }
