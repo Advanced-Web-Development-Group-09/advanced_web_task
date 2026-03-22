@@ -6,13 +6,24 @@
     <mat-card appearance="outlined">
       <mat-card-content>
         <div class="flex flex-row gap-4">
-          <form class="example-form">
-            <mat-form-field>
+          <form class="example-form" (ngSubmit)="onSearch()">
+            <mat-form-field apprearance="outline">
               <mat-label>{{ 'SEARCH' | translate }}</mat-label>
+
               <span matTextPrefix>
                 <mat-icon>search</mat-icon>
               </span>
-              <input matInput (keyup)="applyFilter($event)" #input />
+
+              <input matInput [(ngModel)]="searchValue" name="search" [matAutocomplete]="auto" />
+
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onSelect($event.option.value)"
+              >
+                <mat-option *ngFor="let option of lastSearches" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
           </form>
           <button matFab extended>
@@ -73,7 +84,9 @@
 
           <!-- Planned Departure Column -->
           <ng-container matColumnDef="plannedDeparture">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'PLANNED_DEPARTURE' | translate }}</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ 'PLANNED_DEPARTURE' | translate }}
+            </th>
             <td mat-cell *matCellDef="let row">{{ row.plannedDeparture }}</td>
           </ng-container>
 
@@ -116,7 +129,7 @@
           <!-- No Data Row -->
           <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">
-              {{ 'NO_DATA_FOUND' | translate: { searchValue: input.value } }}
+              {{ 'NO_DATA_FOUND' | translate: { searchValue: searchValue } }}
             </td>
           </tr>
         </table>

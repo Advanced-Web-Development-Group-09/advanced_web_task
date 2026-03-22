@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,15 +15,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { Sidenav } from '../../shared/sidenav/sidenav';
 
 export interface TrainElement {
   id: string;
@@ -22,7 +33,7 @@ export interface TrainElement {
   plannedDeparture: string;
 }
 
-const TRAIN_DATA: TrainElement[] = [
+const TRAIN_DATA: readonly TrainElement[] = [
   {
     id: '1573967790757085557-2407072312-14',
     station: 'Aachen Hbf',
@@ -102,7 +113,10 @@ const TRAIN_DATA: TrainElement[] = [
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [
+    CommonModule,
+    FormsModule,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
@@ -110,63 +124,103 @@ const TRAIN_DATA: TrainElement[] = [
     MatTableModule,
     MatInputModule,
     MatFormFieldModule,
-    FormsModule,
     MatDatepickerModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    Sidenav,
     MatSortModule,
+    MatAutocompleteModule,
     TranslatePipe,
+    Sidenav,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard implements AfterViewInit {
-  displayedColumns: string[] = ['select', 'id', 'station', 'plannedDeparture'];
-  dataSource = new MatTableDataSource(TRAIN_DATA);
-  selection = new SelectionModel<TrainElement>(true, []);
+export class Dashboard implements OnInit, AfterViewInit {
+  readonly displayedColumns: string[] = ['select', 'id', 'station', 'plannedDeparture'];
+  readonly columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
+
+  readonly dataSource = new MatTableDataSource<TrainElement>([...TRAIN_DATA]);
+  readonly selection = new SelectionModel<TrainElement>(true, []);
+
+  searchValue = '';
+  lastSearches: string[] = [];
+
+  expandedElement: TrainElement | null = null;
+
+  private readonly STORAGE_KEY = 'searchHistory';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  ngAfterViewInit() {
+  // Initial load
+
+  ngOnInit(): void {
+    this.loadSearchHistory();
+    this.setupFilter();
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  // Search filter
+  // filtering
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  private setupFilter(): void {
+    this.dataSource.filterPredicate = (data, filter) => {
+      const search = filter.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+      return (
+        data.id.toLowerCase().includes(search) ||
+        data.station.toLowerCase().includes(search) ||
+        data.plannedDeparture.toLowerCase().includes(search)
+      );
+    };
+  }
+
+  onSearch(): void {
+    const value = this.searchValue.trim().toLowerCase();
+
+    this.dataSource.filter = value;
+    this.paginator?.firstPage();
+
+    this.saveSearch(value);
+  }
+
+  onSelect(value: string): void {
+    this.searchValue = value;
+    this.onSearch();
+  }
+
+  // search history
+
+  private loadSearchHistory(): void {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    if (stored) {
+      this.lastSearches = JSON.parse(stored);
     }
   }
 
-  // Checkbox selection
+  private saveSearch(value: string): void {
+    if (!value) return;
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    this.lastSearches = [value, ...this.lastSearches.filter((v) => v !== value)].slice(0, 5);
+
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.lastSearches));
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
+  // selection
 
-    this.selection.select(...this.dataSource.data);
+  isAllSelected(): boolean {
+    return this.selection.selected.length === this.dataSource.data.length;
   }
 
-  /** The label for the checkbox on the passed row */
+  toggleAllRows(): void {
+    this.isAllSelected() ? this.selection.clear() : this.selection.select(...this.dataSource.data);
+  }
+
   checkboxLabel(row?: TrainElement): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -174,18 +228,13 @@ export class Dashboard implements AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
 
-  // Expanded row details
+  // expansion
 
-  columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
-  expandedElement: TrainElement | null = null;
-
-  /** Checks whether an element is expanded. */
-  isExpanded(element: TrainElement) {
+  isExpanded(element: TrainElement): boolean {
     return this.expandedElement === element;
   }
 
-  /** Toggles the expanded state of an element. */
-  toggle(element: TrainElement) {
+  toggle(element: TrainElement): void {
     this.expandedElement = this.isExpanded(element) ? null : element;
   }
 }
