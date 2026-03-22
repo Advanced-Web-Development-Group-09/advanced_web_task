@@ -11,6 +11,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, Depends, Backgro
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from pydantic import BaseModel
 
 from app.database import get_db, SessionLocal
 from app.models import Train, User
@@ -126,48 +127,45 @@ def process_csv_upload(task_id: str, file_path: str, user_id: int, filename: str
 
 @router.get("")
 async def get_trains(
-    search: Optional[str] = None, 
-    sort_by_departure: Optional[bool] = False,
+    search: Optional[str] = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
-    """
-    Get a list of trains.
-    """
+    # Enforce maximum query limit to prevent DoS/abuse via oversized requests
+    MAX_LIMIT = 500
+    limit = min(limit, MAX_LIMIT)
+
     query = db.query(Train)
-    
+
+    # Apply search filter across multiple fields if provided
     if search:
-        # MR32: Filter by Journey ID, Station, or City
+        search = search.strip()
         query = query.filter(
             or_(
-                Train.journey_id.ilike(f"%{search}%"),
+                Train.id.ilike(f"%{search}%"),
                 Train.station.ilike(f"%{search}%"),
-                Train.city.ilike(f"%{search}%")
+                Train.city.ilike(f"%{search}%"),
+                Train.journey_id.ilike(f"%{search}%"),
             )
         )
-        # SR12: Record the search query here to the database
-        user_searches[current_user.id].append({
-            "query": search,
-            "timestamp": datetime.utcnow().isoformat()
-        })
-        # Keep only the last 5 searches in memory to prevent memory leaks
-        user_searches[current_user.id] = user_searches[current_user.id][-5:]
 
-    # Calculate total records for the Angular Paginator BEFORE applying offset/limit
+    # Count total matching records after search filters applied
     total_count = query.count()
 
-    if sort_by_departure:
-        # MR39: Sort by planned departure time
-        query = query.order_by(Train.departure_plan.asc())
-
-    # Apply pagination bounds to prevent browser crashes
-    trains = query.offset(skip).limit(limit).all()
+    # Apply consistent sorting and pagination to results
+    trains = (
+        query
+        .order_by(Train.id.asc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
     return {
         "total": total_count,
-        "items": trains
+        "items": trains,
     }
 
 @router.get("/{train_id}")
@@ -245,48 +243,96 @@ async def delete_uploaded_data(
     uploaded_datasets_cache = [ds for ds in uploaded_datasets_cache if ds["id"] != upload_id]
     return {"message": f"Deleted {len(trains_to_delete)} train records successfully."}
 
-@router.get("/download/csv")
+class ExportRequest(BaseModel):
+    ids: List[int]
+
+@router.post("/download/csv")
 async def download_trains_csv(
-    search: Optional[str] = None, 
-    sort_by_departure: Optional[bool] = False,
+    request: ExportRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
-    MR35: Train data download. Streams the CSV to prevent memory crashes.
+    Export selected trains as CSV (full schema).
     """
-    query = db.query(Train)
-    if search:
-        query = query.filter(
-            or_(
-                Train.journey_id.ilike(f"%{search}%"),
-                Train.station.ilike(f"%{search}%"),
-                Train.city.ilike(f"%{search}%")
-            )
-        )
-    if sort_by_departure:
-        query = query.order_by(Train.departure_plan.asc())
-        
-    # SR11: Add entry to the user's export history
+
+    if not request.ids:
+        raise HTTPException(status_code=400, detail="No IDs provided")
+
+    query = db.query(Train).filter(Train.id.in_(request.ids))
+
+    # Export history
     user_exports[current_user.id].append({
-        "filters": search or "None",
+        "filters": f"{len(request.ids)} selected IDs",
         "timestamp": datetime.utcnow().isoformat()
     })
-    # Keep only the last 50 exports in memory
     user_exports[current_user.id] = user_exports[current_user.id][-50:]
 
     def iter_csv():
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(["journey_id", "line", "station", "city", "departure_plan", "delay_m", "info"])
+
+        # Header (FULL schema)
+        writer.writerow([
+            "id",
+            "journey_id",
+            "line",
+            "eva_nr",
+            "category",
+            "path",
+            "station",
+            "state",
+            "city",
+            "zip_code",
+            "longitude",
+            "latitude",
+            "arrival_plan",
+            "departure_plan",
+            "arrival_change",
+            "departure_change",
+            "delay_m",
+            "delay_check",
+            "info",
+            "upload_batch",
+            "uploader_id"
+        ])
         yield output.getvalue()
         output.seek(0)
         output.truncate(0)
-        
+
+        # Rows
         for train in query.yield_per(1000):
-            writer.writerow([train.journey_id, train.line, train.station, train.city, train.departure_plan, train.delay_m, train.info])
+            writer.writerow([
+                train.id,
+                train.journey_id,
+                train.line,
+                train.eva_nr,
+                train.category,
+                train.path,
+                train.station,
+                train.state,
+                train.city,
+                train.zip_code,
+                train.longitude,
+                train.latitude,
+                train.arrival_plan,
+                train.departure_plan,
+                train.arrival_change,
+                train.departure_change,
+                train.delay_m,
+                train.delay_check,
+                train.info,
+                train.upload_batch,
+                train.uploader_id
+            ])
             yield output.getvalue()
             output.seek(0)
             output.truncate(0)
-            
-    return StreamingResponse(iter_csv(), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=filtered_trains.csv"})
+
+    return StreamingResponse(
+        iter_csv(),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=selected_trains.csv"
+        }
+    )

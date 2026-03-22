@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,103 +15,25 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Sidenav } from '../../shared/sidenav/sidenav';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslatePipe } from '@ngx-translate/core';
 
-export interface TrainElement {
-  id: string;
-  station: string;
-  plannedDeparture: string;
-}
-
-const TRAIN_DATA: TrainElement[] = [
-  {
-    id: '1573967790757085557-2407072312-14',
-    station: 'Aachen Hbf',
-    plannedDeparture: '2024-07-08 00:01:00',
-  },
-  {
-    id: '349781417030375472-2407080017-1',
-    station: 'Aachen Hbf',
-    plannedDeparture: '2024-07-08 00:17:00',
-  },
-  {
-    id: '7157250219775883918-2407072120-25',
-    station: 'Aachen-Rothe Erde',
-    plannedDeparture: '2024-07-08 00:04:00',
-  },
-  {
-    id: '349781417030375472-2407080017-2',
-    station: 'Aachen West',
-    plannedDeparture: '2024-07-08 00:21:00',
-  },
-  {
-    id: '1983158592123451570-2407080010-3',
-    station: 'Aachen West',
-    plannedDeparture: '2024-07-08 00:21:00',
-  },
-  {
-    id: '-5293934437045765939-2407080023-2',
-    station: 'Aachen West',
-    plannedDeparture: '2024-07-08 00:31:00',
-  },
-  {
-    id: '6845762881043426854-2407072357-6',
-    station: 'Aachen West',
-    plannedDeparture: '2024-07-08 00:58:00',
-  },
-  {
-    id: '-2100556839975301087-2407072307-13',
-    station: 'Aachen West',
-    plannedDeparture: '2024-07-08 00:41:00',
-  },
-  {
-    id: '-7696913984968518161-2407080037-1',
-    station: 'Aalen Hbf',
-    plannedDeparture: '2024-07-08 00:37:00',
-  },
-  {
-    id: '-6027587483204218492-2407080013-4',
-    station: 'Achim',
-    plannedDeparture: '2024-07-08 00:27:00',
-  },
-  {
-    id: '-7723223610149163054-2407072310-9',
-    station: 'Ahlen (Han)',
-    plannedDeparture: '2024-07-08 00:16:00',
-  },
-  {
-    id: '5729393359484274537-2407080007-8',
-    station: 'Ahlen (Han)',
-    plannedDeparture: '2024-07-08 00:39:00',
-  },
-  {
-    id: '1640260421649276864-2407080004-5',
-    station: 'Ahlen (Han)',
-    plannedDeparture: '2024-07-08 00:16:00',
-  },
-  {
-    id: '8352762151701721590-2407080034-5',
-    station: 'Ahlen (Han)',
-    plannedDeparture: '2024-07-08 00:46:00',
-  },
-  {
-    id: '-1113872591615872448-2407072343-6',
-    station: 'Ahlen (Han)',
-    plannedDeparture: '2024-07-08 00:11:00',
-  },
-];
+import { Sidenav } from '../../shared/sidenav/sidenav';
+import { TrainService, Train } from '../../services/train/train.service';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [
+    CommonModule,
+    FormsModule,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,
@@ -110,82 +41,145 @@ const TRAIN_DATA: TrainElement[] = [
     MatTableModule,
     MatInputModule,
     MatFormFieldModule,
-    FormsModule,
     MatDatepickerModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    Sidenav,
     MatSortModule,
+    MatAutocompleteModule,
     TranslatePipe,
+    Sidenav,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard implements AfterViewInit {
-  displayedColumns: string[] = ['select', 'id', 'station', 'plannedDeparture'];
-  dataSource = new MatTableDataSource(TRAIN_DATA);
-  selection = new SelectionModel<TrainElement>(true, []);
+export class Dashboard implements OnInit, AfterViewInit {
+  // Table columns
+  readonly displayedColumns: string[] = ['select', 'id', 'station', 'plannedDeparture'];
+  readonly columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
+
+  // Data and state
+  readonly dataSource = new MatTableDataSource<Train>([]);
+  readonly selection = new SelectionModel<Train>(true, []);
+
+  searchValue = '';
+  lastSearches: string[] = [];
+  total = 0;
+  expandedElement: Train | null = null;
+
+  private readonly STORAGE_KEY = 'searchHistory';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  constructor(private trainService: TrainService) {}
+
+  // Load search history on init
+  ngOnInit(): void {
+    this.loadSearchHistory();
   }
 
-  // Search filter
+  // Initialize paginator and fetch trains
+  ngAfterViewInit(): void {
+    this.loadTrains(0, this.paginator.pageSize || 10);
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.paginator.page.subscribe((event: PageEvent) => {
+      this.loadTrains(event.pageIndex, event.pageSize);
+    });
+  }
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  // Fetch trains from service
+  loadTrains(pageIndex: number, pageSize: number): void {
+    const skip = pageIndex * pageSize;
+
+    this.trainService.getTrains(skip, pageSize, this.searchValue).subscribe({
+      next: (res) => {
+        this.dataSource.data = res.items;
+        this.total = res.total;
+        this.selection.clear();
+      },
+      error: (err) => {
+        console.error('Failed to load trains', err);
+      },
+    });
+  }
+
+  // Search and reset to first page
+  onSearch(): void {
+    const value = this.searchValue.trim();
+
+    this.saveSearch(value);
+
+    this.paginator.firstPage();
+    this.loadTrains(0, this.paginator.pageSize || 10);
+  }
+
+  // Set search value from suggestion and search
+  onSelect(value: string): void {
+    this.searchValue = value;
+    this.onSearch();
+  }
+
+  // Load search history from localStorage
+  private loadSearchHistory(): void {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    if (stored) {
+      this.lastSearches = JSON.parse(stored);
     }
   }
 
-  // Checkbox selection
+  // Save search to history (max 5 unique)
+  private saveSearch(value: string): void {
+    if (!value) return;
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    this.lastSearches = [value, ...this.lastSearches.filter((v) => v !== value)].slice(0, 5);
+
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.lastSearches));
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.dataSource.data);
+  // Check if all rows are selected
+  isAllSelected(): boolean {
+    return this.selection.selected.length === this.dataSource.data.length;
   }
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: TrainElement): string {
+  // Toggle all row selection
+  toggleAllRows(): void {
+    this.isAllSelected() ? this.selection.clear() : this.selection.select(...this.dataSource.data);
+  }
+
+  // Generate checkbox label for accessibility
+  checkboxLabel(row?: Train): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
 
-  // Expanded row details
-
-  columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
-  expandedElement: TrainElement | null = null;
-
-  /** Checks whether an element is expanded. */
-  isExpanded(element: TrainElement) {
+  // Check if row is expanded
+  isExpanded(element: Train): boolean {
     return this.expandedElement === element;
   }
 
-  /** Toggles the expanded state of an element. */
-  toggle(element: TrainElement) {
+  // Toggle row expansion
+  toggle(element: Train): void {
     this.expandedElement = this.isExpanded(element) ? null : element;
+  }
+
+  // Export logic
+  exportSelected(): void {
+    const selectedIds = this.selection.selected.map((train) => train.id);
+
+    this.trainService.exportSelectedTrains(selectedIds).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      // adjust filename depending on backend
+      a.download = 'trains_export.csv';
+
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
   }
 }
