@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TrainService } from './train.service';
+import { TrainService } from '../../services/train/train.service';
 import { timer, Subscription } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 
@@ -8,7 +8,7 @@ import { switchMap, takeWhile } from 'rxjs/operators';
   selector: 'app-datasets',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './datasets.component.html'
+  templateUrl: './datasets.component.html',
 })
 export class DatasetsComponent implements OnInit {
   trains: any[] = [];
@@ -28,13 +28,13 @@ export class DatasetsComponent implements OnInit {
     this.trainService.getTrains(0, 50).subscribe({
       next: (data: any) => {
         // Depending on your API pagination wrap, it might be `data` or `data.items`
-        this.trains = data.items || data; 
+        this.trains = data.items || data;
         this.isLoading = false;
       },
       error: (err: any) => {
         console.error('Failed to load datasets', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -44,7 +44,7 @@ export class DatasetsComponent implements OnInit {
       const file = input.files[0];
       this.isUploading = true;
       this.uploadProgress = 0;
-      
+
       this.trainService.uploadTrainData(file).subscribe({
         next: (response: any) => {
           this.pollUploadStatus(response.task_id);
@@ -52,30 +52,32 @@ export class DatasetsComponent implements OnInit {
         error: (err: any) => {
           console.error('Upload failed', err);
           this.isUploading = false;
-        }
+        },
       });
     }
   }
 
   pollUploadStatus(taskId: string): void {
     // Ping the backend every 500ms until the status is 'completed' or 'failed'
-    this.pollingSubscription = timer(0, 500).pipe(
-      switchMap(() => this.trainService.getUploadStatus(taskId)),
-      takeWhile((res: any) => res.status !== 'completed' && res.status !== 'failed', true)
-    ).subscribe({
-      next: (res: any) => {
-        this.uploadProgress = res.progress_percentage || 0;
-        if (res.status === 'completed') {
-          this.isUploading = false;
-          this.loadDatasets(); // Refresh the table with new data
-          alert('Dataset successfully processed!');
-        } else if (res.status === 'failed') {
-          this.isUploading = false;
-          alert('Error processing the dataset.');
-        }
-      },
-      error: () => this.isUploading = false
-    });
+    this.pollingSubscription = timer(0, 500)
+      .pipe(
+        switchMap(() => this.trainService.getUploadStatus(taskId)),
+        takeWhile((res: any) => res.status !== 'completed' && res.status !== 'failed', true),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.uploadProgress = res.progress_percentage || 0;
+          if (res.status === 'completed') {
+            this.isUploading = false;
+            this.loadDatasets(); // Refresh the table with new data
+            alert('Dataset successfully processed!');
+          } else if (res.status === 'failed') {
+            this.isUploading = false;
+            alert('Error processing the dataset.');
+          }
+        },
+        error: () => (this.isUploading = false),
+      });
   }
 
   downloadCsv(): void {
@@ -88,7 +90,7 @@ export class DatasetsComponent implements OnInit {
         anchor.click();
         window.URL.revokeObjectURL(url);
       },
-      error: (err: any) => console.error('Download failed', err)
+      error: (err: any) => console.error('Download failed', err),
     });
   }
 }

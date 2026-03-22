@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { WrongFileTypeDialog } from '../../dialogs/wrong-file-type-dialog/wrong-file-type-dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TrainService } from './train.service';
+import { TrainService } from '../../services/train/train.service';
 import { timer, Subscription } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 import { HttpEventType } from '@angular/common/http';
