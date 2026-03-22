@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { routes } from './app.routes';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from './shared/custom-paginator-intl/custom-paginator-intl';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -17,11 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-<<<<<<< Updated upstream
     importProvidersFrom(FormsModule),
-=======
     provideHttpClient(withInterceptors([authInterceptor])),
->>>>>>> Stashed changes
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: '/i18n/',

@@ -4,22 +4,20 @@ import { Observable } from 'rxjs';
 import { environment } from './environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TrainService {
-  private apiUrl = `${environment.apiUrl}/trains`;
+  private apiUrl = 'http://127.0.0.1:8000/api/trains';
 
   constructor(private http: HttpClient) {}
 
   getTrains(skip: number = 0, limit: number = 50, search?: string): Observable<any> {
-    let params = new HttpParams()
-      .set('skip', skip.toString())
-      .set('limit', limit.toString());
-      
+    let params = new HttpParams().set('skip', skip.toString()).set('limit', limit.toString());
+
     if (search) {
       params = params.set('search', search);
     }
-    
+
     return this.http.get(this.apiUrl, { params });
   }
 
@@ -28,10 +26,10 @@ export class TrainService {
     formData.append('file', file);
     return this.http.post(`${this.apiUrl}/upload`, formData, {
       reportProgress: true,
-      observe: 'events'
+      observe: 'events',
     });
   }
-  
+
   getUploadStatus(taskId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/upload/status/${taskId}`);
   }
