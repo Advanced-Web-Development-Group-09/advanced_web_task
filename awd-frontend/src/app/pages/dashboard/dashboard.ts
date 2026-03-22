@@ -165,4 +165,21 @@ export class Dashboard implements OnInit, AfterViewInit {
   toggle(element: Train): void {
     this.expandedElement = this.isExpanded(element) ? null : element;
   }
+
+  // Export logic
+  exportSelected(): void {
+    const selectedIds = this.selection.selected.map((train) => train.id);
+
+    this.trainService.exportSelectedTrains(selectedIds).subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      // adjust filename depending on backend
+      a.download = 'trains_export.csv';
+
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
 }

@@ -29,7 +29,7 @@ export class TrainService {
 
     let params = new HttpParams().set('skip', skip).set('limit', limit);
 
-    // 🔍 Add search param only if it exists
+    // Add search param only if it exists
     if (search && search.trim().length > 0) {
       params = params.set('search', search.trim());
     }
@@ -42,5 +42,23 @@ export class TrainService {
       params,
       headers,
     });
+  }
+
+  exportSelectedTrains(ids: string[]): Observable<Blob> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(
+      `${this.apiUrl}/download/csv`,
+      { ids },
+      {
+        headers,
+        responseType: 'blob', // important for file download
+      },
+    );
   }
 }
