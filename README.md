@@ -1,5 +1,7 @@
 # AWD Project
 
+**Note:** The backend server is already running. You can proceed with running the frontend.
+
 This project consists of a Python FastAPI backend and an Angular frontend.
 
 ## How to Run the Application

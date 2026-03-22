@@ -32,8 +32,9 @@ def _parse_float(val):
         return None
 
 upload_tasks = {}
+uploaded_datasets_cache = []
 
-def process_csv_upload(task_id: str, file_path: str, user_id: int):
+def process_csv_upload(task_id: str, file_path: str, user_id: int, filename: str, username: str):
     """Background task to process large CSV uploads and report progress."""
     upload_tasks[task_id] = {"progress_percentage": 0, "status": "processing", "result": None}
     db = SessionLocal()
@@ -99,6 +100,15 @@ def process_csv_upload(task_id: str, file_path: str, user_id: int):
         if user:
             user.reward_points += 10
         db.commit()
+
+        dataset_info = {
+            "id": upload_batch_id,
+            "name": filename,
+            "size": total_size,
+            "timestamp": datetime.utcnow().isoformat(),
+            "uploader": username
+        }
+        uploaded_datasets_cache.append(dataset_info)
         
         upload_tasks[task_id]["progress_percentage"] = 100
         upload_tasks[task_id]["status"] = "completed"
@@ -188,7 +198,7 @@ async def upload_train_data(
         shutil.copyfileobj(file.file, f)
         
     task_id = f"task_upload_{uuid.uuid4().hex[:8]}"
-    background_tasks.add_task(process_csv_upload, task_id, temp_path, current_user.id)
+    background_tasks.add_task(process_csv_upload, task_id, temp_path, current_user.id, file.filename, current_user.username)
     
     return {
         "message": "Upload started. Check status endpoint.",
@@ -203,6 +213,11 @@ async def get_upload_status(task_id: str, current_user: User = Depends(get_curre
         raise HTTPException(status_code=404, detail="Upload task not found")
     return {"task_id": task_id, **task}
 
+@router.get("/uploads")
+async def get_uploaded_datasets(current_user: User = Depends(get_current_user)):
+    """Retrieve the globally cached list of uploaded datasets."""
+    return uploaded_datasets_cache
+
 @router.delete("/uploads/{upload_id}")
 async def delete_uploaded_data(
     upload_id: str,
@@ -212,6 +227,7 @@ async def delete_uploaded_data(
     """
     MR40: Delete uploaded data
     """
+    global uploaded_datasets_cache
     trains_to_delete = db.query(Train).filter(
         Train.upload_batch == upload_id, 
         Train.uploader_id == current_user.id
@@ -224,6 +240,9 @@ async def delete_uploaded_data(
         db.delete(train)
         
     db.commit()
+
+    # Remove from cache
+    uploaded_datasets_cache = [ds for ds in uploaded_datasets_cache if ds["id"] != upload_id]
     return {"message": f"Deleted {len(trains_to_delete)} train records successfully."}
 
 @router.get("/download/csv")

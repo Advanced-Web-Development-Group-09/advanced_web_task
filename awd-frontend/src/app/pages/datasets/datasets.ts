@@ -1,9 +1,9 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   inject,
-  ViewChild,
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
+<<<<<<< Updated upstream
 import { WrongFileTypeDialog } from '../../dialogs/wrong-file-type-dialog/wrong-file-type-dialog';
 
 export interface DatasetElement {
@@ -48,6 +49,14 @@ const EXPORTED_DATA: DatasetElement[] = [
   { name: 'export_9.csv', size: '8mb', date: '2023-01-09 16:44:00' },
   { name: 'export_10.csv', size: '12mb', date: '2023-01-10 18:55:00' },
 ];
+=======
+import { WrongFileTypeDialog } from '../../dialogs/upload_dialog/wrong-file-type-dialog/wrong-file-type-dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TrainService } from './train.service';
+import { timer, Subscription } from 'rxjs';
+import { switchMap, takeWhile } from 'rxjs/operators';
+import { HttpEventType } from '@angular/common/http';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-datasets',
@@ -59,6 +68,7 @@ const EXPORTED_DATA: DatasetElement[] = [
     MatIconModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     CommonModule,
     TranslatePipe,
   ],
@@ -66,24 +76,51 @@ const EXPORTED_DATA: DatasetElement[] = [
   styleUrl: './datasets.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Datasets implements AfterViewInit {
+export class Datasets implements OnInit {
   // Dialog Logic
   readonly dialog = inject(MatDialog);
+  private trainService = inject(TrainService);
+  private cdr = inject(ChangeDetectorRef);
 
-  // Table Logic
-  displayedColumns: string[] = ['name', 'size', 'date', 'button'];
+  datasetColumns = ['name', 'size', 'uploader', 'timestamp', 'actions'];
+  exportsColumns = ['timestamp', 'action'];
+  dataSourceDatasets = new MatTableDataSource<any>([]);
+  dataSourceExports = new MatTableDataSource<any>([]);
 
-  dataSourceUploaded = new MatTableDataSource<DatasetElement>(UPLOADED_DATA);
-  dataSourceExported = new MatTableDataSource<DatasetElement>(EXPORTED_DATA);
+  isUploading = false;
+  uploadProgress = 0;
+  uploadStatusText = '';
+  pollingSubscription!: Subscription;
 
-  // Paginator Logic
+  ngOnInit() {
+    this.loadDatasets();
+    this.loadExports();
+    
+    const savedTaskId = localStorage.getItem('upload_task_id');
+    if (savedTaskId) {
+      this.isUploading = true;
+      this.pollUploadStatus(savedTaskId);
+    }
+  }
 
-  @ViewChild('uploadedPaginator') uploadedPaginator!: MatPaginator;
-  @ViewChild('exportedPaginator') exportedPaginator!: MatPaginator;
+  loadDatasets(): void {
+    this.trainService.getUploadedDatasets().subscribe({
+      next: (data: any) => {
+        this.dataSourceDatasets.data = data;
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => console.error('Failed to load datasets', err)
+    });
+  }
 
-  ngAfterViewInit() {
-    this.dataSourceUploaded.paginator = this.uploadedPaginator;
-    this.dataSourceExported.paginator = this.exportedPaginator;
+  loadExports(): void {
+    this.trainService.getExports().subscribe({
+      next: (data: any) => {
+        this.dataSourceExports.data = data;
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => console.error('Failed to load export history', err)
+    });
   }
 
   // Drag and Drop Logic
@@ -103,6 +140,7 @@ export class Datasets implements AfterViewInit {
   onDrop(event: DragEvent) {
     event.preventDefault();
     this.isDragging = false;
+    if (this.isUploading) return;
 
     if (event.dataTransfer?.files.length) {
       const file = event.dataTransfer.files[0];
@@ -121,8 +159,10 @@ export class Datasets implements AfterViewInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
+    if (this.isUploading) return;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      input.value = ''; // clear value so same file can be selected again
       if (
         !file.name.endsWith('.csv') &&
         !file.name.endsWith('.xlsx') &&
@@ -137,6 +177,99 @@ export class Datasets implements AfterViewInit {
 
   handleFile(file: File) {
     this.uploadedFiles.push(file);
-    // Example: upload to backend later
+    this.cdr.markForCheck();
+  }
+
+  deleteFile(index: number) {
+    this.uploadedFiles.splice(index, 1);
+    this.cdr.markForCheck();
+  }
+
+  confirmUpload(file: File, index: number) {
+    this.uploadFile(file);
+  }
+
+  uploadFile(file: File): void {
+    this.isUploading = true;
+    this.uploadProgress = 0;
+    this.uploadStatusText = 'Uploading to server...';
+    this.cdr.markForCheck();
+    this.trainService.uploadTrainData(file).subscribe({
+      next: (response: any) => {
+        if (response.type === HttpEventType.UploadProgress) {
+          this.uploadProgress = Math.round(100 * response.loaded / (response.total || response.loaded));
+          this.cdr.markForCheck();
+        } else if (response.type === HttpEventType.Response) {
+          const taskId = response.body.task_id;
+          localStorage.setItem('upload_task_id', taskId);
+          this.pollUploadStatus(taskId);
+        }
+      },
+      error: (err: any) => {
+        console.error('Upload failed', err);
+        this.isUploading = false;
+        this.uploadStatusText = '';
+        localStorage.removeItem('upload_task_id');
+        alert('File upload failed.');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  pollUploadStatus(taskId: string): void {
+    this.uploadStatusText = 'Processing Dataset in Background...';
+    this.pollingSubscription = timer(0, 500).pipe(
+      switchMap(() => this.trainService.getUploadStatus(taskId)),
+      takeWhile((res: any) => res.status !== 'completed' && res.status !== 'failed', true)
+    ).subscribe({
+      next: (res: any) => {
+        this.uploadProgress = Math.round(res.progress_percentage || 0);
+        this.cdr.markForCheck();
+        if (res.status === 'completed') {
+          this.isUploading = false;
+          this.uploadedFiles = [];
+          this.uploadStatusText = '';
+          localStorage.removeItem('upload_task_id');
+          this.loadDatasets();
+          alert('Dataset successfully processed!');
+        } else if (res.status === 'failed') {
+          this.isUploading = false;
+          this.uploadStatusText = '';
+          localStorage.removeItem('upload_task_id');
+          alert('Error processing the dataset.');
+        }
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isUploading = false;
+        this.uploadStatusText = '';
+        localStorage.removeItem('upload_task_id');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  downloadCsv(): void {
+    this.trainService.downloadCsv().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'train_data_export.csv';
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+        this.loadExports();
+      },
+      error: (err: any) => console.error('Download failed', err)
+    });
+  }
+
+  deleteDataset(uploadId: string): void {
+    this.trainService.deleteUpload(uploadId).subscribe({
+      next: () => {
+        this.loadDatasets();
+      },
+      error: (err: any) => console.error('Failed to delete dataset', err)
+    });
   }
 }

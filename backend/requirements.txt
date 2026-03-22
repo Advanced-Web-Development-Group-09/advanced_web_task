@@ -1,7 +1,16 @@
 fastapi
 uvicorn
+<<<<<<< Updated upstream
 sqlalchemy
 pydantic[email]
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
+=======
+pydantic[email]
+sqlalchemy
+psycopg2-binary
+bcrypt
+python-jose[cryptography]
+python-multipart
+>>>>>>> Stashed changes
