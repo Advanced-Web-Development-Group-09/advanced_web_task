@@ -7,7 +7,11 @@
       <mat-card-title>{{ 'DATASET_UPLOAD' | translate }}</mat-card-title>
       <mat-card-content>
         <div class="flex flex-col gap-4">
-          <div class="upload-area" [style.pointer-events]="isUploading ? 'none' : 'auto'" [style.opacity]="isUploading ? '0.5' : '1'">
+          <div
+            class="upload-area"
+            [style.pointer-events]="isUploading ? 'none' : 'auto'"
+            [style.opacity]="isUploading ? '0.5' : '1'"
+          >
             <p>{{ 'DRAG_DROP_INSTRUCTION' | translate }}</p>
             <div
               class="upload-dropzone"
@@ -48,17 +52,27 @@
                 </button>
               </div>
               <div class="flex flex-row items-center gap-4 w-full max-w-xs" *ngIf="isUploading">
-                <span class="text-sm font-medium text-gray-600">{{ uploadStatusText }} {{ uploadProgress }}%</span>
-                <mat-progress-bar mode="determinate" [value]="uploadProgress" class="flex-grow"></mat-progress-bar>
+                <span class="text-sm font-medium text-gray-600"
+                  >{{ uploadStatusText }} {{ uploadProgress }}%</span
+                >
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="uploadProgress"
+                  class="grow"
+                ></mat-progress-bar>
               </div>
             </div>
           </div>
 
           <!-- Background task progress when returning to the page (no local file object) -->
           <div *ngIf="isUploading && uploadedFiles.length === 0" class="flex flex-col gap-2 mt-4">
-            <div class="flex flex-row gap-2 w-full border border-blue-400 bg-blue-50 rounded-lg py-4 px-6 items-center justify-between">
+            <div
+              class="flex flex-row gap-2 w-full border border-blue-400 bg-blue-50 rounded-lg py-4 px-6 items-center justify-between"
+            >
               <div class="flex flex-col gap-2 w-full">
-                <div class="flex justify-between items-center text-sm font-medium text-blue-700 mb-2">
+                <div
+                  class="flex justify-between items-center text-sm font-medium text-blue-700 mb-2"
+                >
                   <span>{{ uploadStatusText || 'Processing Dataset in Background...' }}</span>
                   <span>{{ uploadProgress }}%</span>
                 </div>
@@ -75,29 +89,36 @@
       <mat-card-content>
         <table mat-table [dataSource]="dataSourceDatasets" class="mat-elevation-z8">
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element">{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="size">
-            <th mat-header-cell *matHeaderCellDef> Size (Bytes) </th>
+            <th mat-header-cell *matHeaderCellDef>Size (Bytes)</th>
             <td mat-cell *matCellDef="let element">{{ element.size | number }}</td>
           </ng-container>
 
           <ng-container matColumnDef="uploader">
-            <th mat-header-cell *matHeaderCellDef> Uploader </th>
+            <th mat-header-cell *matHeaderCellDef>Uploader</th>
             <td mat-cell *matCellDef="let element">{{ element.uploader }}</td>
           </ng-container>
 
           <ng-container matColumnDef="timestamp">
-            <th mat-header-cell *matHeaderCellDef> Upload Date </th>
-            <td mat-cell *matCellDef="let element">{{ element.timestamp | date:'short' }}</td>
+            <th mat-header-cell *matHeaderCellDef>Upload Date</th>
+            <td mat-cell *matCellDef="let element">{{ element.timestamp | date: 'short' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> </th>
+            <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-              <button mat-icon-button color="warn" (click)="deleteDataset(element.id)" [title]="'DELETE' | translate"><mat-icon>delete</mat-icon></button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteDataset(element.id)"
+                [title]="'DELETE' | translate"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
             </td>
           </ng-container>
 
@@ -118,12 +139,12 @@
       <mat-card-content>
         <table mat-table [dataSource]="dataSourceExports" class="mat-elevation-z8">
           <ng-container matColumnDef="timestamp">
-            <th mat-header-cell *matHeaderCellDef> Date </th>
-            <td mat-cell *matCellDef="let element">{{ element.timestamp | date:'medium' }}</td>
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let element">{{ element.timestamp | date: 'medium' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <th mat-header-cell *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let element">Downloaded CSV</td>
           </ng-container>
 

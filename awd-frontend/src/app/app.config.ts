@@ -9,7 +9,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from './shared/custom-paginator-intl/custom-paginator-intl';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
