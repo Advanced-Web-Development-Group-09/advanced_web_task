@@ -116,48 +116,45 @@ def process_csv_upload(task_id: str, file_path: str, user_id: int):
 
 @router.get("")
 async def get_trains(
-    search: Optional[str] = None, 
-    sort_by_departure: Optional[bool] = False,
+    search: Optional[str] = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
-    """
-    Get a list of trains.
-    """
+    # Enforce maximum query limit to prevent DoS/abuse via oversized requests
+    MAX_LIMIT = 500
+    limit = min(limit, MAX_LIMIT)
+
     query = db.query(Train)
-    
+
+    # Apply search filter across multiple fields if provided
     if search:
-        # MR32: Filter by Journey ID, Station, or City
+        search = search.strip()
         query = query.filter(
             or_(
-                Train.journey_id.ilike(f"%{search}%"),
+                Train.id.ilike(f"%{search}%"),
                 Train.station.ilike(f"%{search}%"),
-                Train.city.ilike(f"%{search}%")
+                Train.city.ilike(f"%{search}%"),
+                Train.journey_id.ilike(f"%{search}%"),
             )
         )
-        # SR12: Record the search query here to the database
-        user_searches[current_user.id].append({
-            "query": search,
-            "timestamp": datetime.utcnow().isoformat()
-        })
-        # Keep only the last 5 searches in memory to prevent memory leaks
-        user_searches[current_user.id] = user_searches[current_user.id][-5:]
 
-    # Calculate total records for the Angular Paginator BEFORE applying offset/limit
+    # Count total matching records after search filters applied
     total_count = query.count()
 
-    if sort_by_departure:
-        # MR39: Sort by planned departure time
-        query = query.order_by(Train.departure_plan.asc())
-
-    # Apply pagination bounds to prevent browser crashes
-    trains = query.offset(skip).limit(limit).all()
+    # Apply consistent sorting and pagination to results
+    trains = (
+        query
+        .order_by(Train.id.asc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
     return {
         "total": total_count,
-        "items": trains
+        "items": trains,
     }
 
 @router.get("/{train_id}")
