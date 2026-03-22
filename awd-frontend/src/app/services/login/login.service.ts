@@ -26,4 +26,8 @@ export class LoginService {
 
     return this.http.post(this.apiUrl, body.toString(), { headers });
   }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
 }
