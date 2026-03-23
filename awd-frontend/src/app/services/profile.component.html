@@ -1,0 +1,41 @@
+<div class="profile-container" *ngIf="userProfile">
+  <h2>My Profile</h2>
+  
+  <div class="profile-details">
+    <p><strong>Username:</strong> {{ userProfile.username }}</p>
+    <p><strong>Email:</strong> {{ userProfile.email }}</p>
+    <p><strong>Reward Points:</strong> {{ userProfile.reward_points }}</p>
+    <p><strong>Current Status:</strong> {{ userProfile.status }}</p>
+  </div>
+  
+  <hr>
+  
+  <div class="status-update-section">
+    <h3>Update Status</h3>
+    
+    <div class="form-group">
+      <label for="statusSelect">Select Status:</label>
+      <select 
+        id="statusSelect" 
+        [(ngModel)]="currentStatus" 
+        class="form-control"
+        style="max-width: 300px; margin-bottom: 15px;">
+        <option *ngFor="let status of availableStatuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+
+    <button 
+      class="btn btn-primary" 
+      [disabled]="isUpdating || currentStatus === userProfile.status" 
+      (click)="onUpdateStatus()">
+      {{ isUpdating ? 'Updating...' : 'Update Status' }}
+    </button>
+    
+    <!-- Success/Error Message display -->
+    <p *ngIf="statusMessage" class="mt-2 text-info">
+      {{ statusMessage }}
+    </p>
+  </div>
+</div>

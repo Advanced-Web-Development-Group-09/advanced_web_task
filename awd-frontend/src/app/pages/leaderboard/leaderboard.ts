@@ -11,6 +11,7 @@ export interface PlayerElement {
   place: number;
   username: string;
   points: number;
+  status?: string;
 }
 
 @Component({
@@ -20,7 +21,7 @@ export interface PlayerElement {
   styleUrl: './leaderboard.css',
 })
 export class Leaderboard implements OnInit {
-  displayedColumns: string[] = ['place', 'name', 'points'];
+  displayedColumns: string[] = ['place', 'name', 'status', 'points'];
   dataSource: PlayerElement[] = [];
   topUsers: PlayerElement[] = [];
 
@@ -31,7 +32,7 @@ export class Leaderboard implements OnInit {
   }
 
   fetchLeaderboard(): void {
-    this.http.get<{username: string, points: number}[]>('http://127.0.0.1:8000/api/users/leaderboard').subscribe({
+    this.http.get<{username: string, points: number, status: string}[]>('http://127.0.0.1:8000/api/users/leaderboard').subscribe({
       next: (data) => {
         const rankedData: PlayerElement[] = data.map((user, index) => ({
           ...user,

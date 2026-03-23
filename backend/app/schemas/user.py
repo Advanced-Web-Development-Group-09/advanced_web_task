@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 class UserRegister(BaseModel):
@@ -17,7 +18,7 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: str
-    status: str
+    status: Optional[str] = "Available"
     reward_points: int
 
     class Config:

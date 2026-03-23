@@ -8,6 +8,7 @@
   "CHANCE_OF_CANCELLATION": "Chance of Cancellation",
   "BASED_ON_A_TOTAL_OF": "Based on a total of",
   "RECORDED_TRAINS": "recorded trains",
+  "EXPECTED_DELAY": "Expected Delay",
   
   "TOP_DELAY_REASONS": "Top Delay Reasons",
   "WEATHER_CONDITIONS": "Weather Conditions",
@@ -16,8 +17,15 @@
   "TRACK_MAINTENANCE": "Track Maintenance",
   "TRAIN_DEFECT": "Train Defect",
 
-  "AVERAGE_STATE_DELAY": "Average State Delay",
-  "STATE": "State",
+  "ALIEN_INVASION": "Alien Invasion",
+  "DRAGON_ON_TRACKS": "Dragon on Tracks",
+  "MATRIX_GLITCH": "Matrix Glitch",
+  "WEATHER_INFO": "Weather Info",
+  "TEMPERATURE": "Temperature",
+  "WIND_SPEED": "Wind Speed",
+
+  "AVERAGE_STATE_DELAY": "Average per Bundesland",
+  "STATE": "Bundesland",
   "MINUTES_SHORT": "min",
   "AVERAGE_DELAY_TIME": "Average Delay Time",
   "POINTS": "Points",

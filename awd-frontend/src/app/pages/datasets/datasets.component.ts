@@ -87,7 +87,9 @@ export class DatasetsComponent implements OnInit {
         const anchor = document.createElement('a');
         anchor.href = url;
         anchor.download = 'train_data_export.csv';
+        document.body.appendChild(anchor);
         anchor.click();
+        document.body.removeChild(anchor);
         window.URL.revokeObjectURL(url);
       },
       error: (err: any) => console.error('Download failed', err),

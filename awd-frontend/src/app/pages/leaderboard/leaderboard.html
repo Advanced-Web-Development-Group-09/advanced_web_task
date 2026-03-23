@@ -17,6 +17,7 @@
               <div class="flex flex-col w-fit items-center">
                 <p class="text-xl font-medium w-fit">{{ topUsers[1]?.username }}</p>
                 <p class="w-fit">{{ topUsers[1]?.points }} {{ 'POINTS' | translate }}</p>
+                <p class="text-xs italic opacity-70 mt-1">"{{ topUsers[1]?.status || 'Available' }}"</p>
               </div>
             </div>
             <div
@@ -37,6 +38,7 @@
               <div class="flex flex-col w-fit items-center">
                 <p class="text-xl font-medium w-fit">{{ topUsers[0]?.username }}</p>
                 <p class="w-fit">{{ topUsers[0]?.points }} {{ 'POINTS' | translate }}</p>
+                <p class="text-xs italic opacity-70 mt-1">"{{ topUsers[0]?.status || 'Available' }}"</p>
               </div>
             </div>
             <div
@@ -57,6 +59,7 @@
               <div class="flex flex-col w-fit items-center">
                 <p class="text-xl font-medium w-fit">{{ topUsers[2]?.username }}</p>
                 <p class="w-fit">{{ topUsers[2]?.points }} {{ 'POINTS' | translate }}</p>
+                <p class="text-xs italic opacity-70 mt-1">"{{ topUsers[2]?.status || 'Available' }}"</p>
               </div>
             </div>
             <div
@@ -80,6 +83,11 @@
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>{{ 'NAME' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element" class="italic opacity-80">"{{ element.status || 'Available' }}"</td>
           </ng-container>
 
           <ng-container matColumnDef="points">

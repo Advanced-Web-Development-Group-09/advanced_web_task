@@ -10,7 +10,7 @@
           <form class="flex flex-col gap-2 w-full">
             <mat-form-field>
               <mat-label>{{ 'START_STATION' | translate }}</mat-label>
-              <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" />
+              <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [title]="'START_STATION' | translate" [placeholder]="'START_STATION' | translate" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
@@ -19,7 +19,7 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>{{ 'END_STATION' | translate }}</mat-label>
-              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" />
+              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" [title]="'END_STATION' | translate" [placeholder]="'END_STATION' | translate" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions2 | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
@@ -36,8 +36,19 @@
           
           <div *ngIf="cancellationResult" class="result-container fade-in mt-6 p-6 rounded-2xl w-full flex flex-col items-center gap-1 text-center">
              <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest mb-2">{{ 'RESULTS' | translate }}</h3>
-             <p class="text-5xl font-extrabold text-primary">{{ cancellationResult.cancellation_odds | number:'1.1-2' }}%</p>
-             <p class="text-base font-medium opacity-90 mt-2">{{ 'CHANCE_OF_CANCELLATION' | translate }}</p>
+             <div class="flex flex-row justify-around w-full mt-2 mb-2">
+               <div class="flex flex-col items-center">
+                 <p class="text-5xl font-extrabold text-primary">{{ cancellationResult.cancellation_odds | number:'1.1-2' }}%</p>
+                 <p class="text-base font-medium opacity-90 mt-2">{{ 'CHANCE_OF_CANCELLATION' | translate }}</p>
+               </div>
+               <div class="flex flex-col items-center">
+                 <p class="text-5xl font-extrabold text-primary flex items-baseline gap-2">
+                   {{ cancellationResult.expected_delay | number:'1.1-1' }}
+                   <span class="text-2xl font-medium opacity-80">{{ 'MINUTES_SHORT' | translate }}</span>
+                 </p>
+                 <p class="text-base font-medium opacity-90 mt-2">{{ 'EXPECTED_DELAY' | translate }}</p>
+               </div>
+             </div>
              <mat-divider class="w-full my-4"></mat-divider>
              <p class="text-sm opacity-70">{{ 'BASED_ON_A_TOTAL_OF' | translate }} {{ cancellationResult.total_trains }} {{ 'RECORDED_TRAINS' | translate }}.</p>
           </div>
@@ -55,16 +66,33 @@
 
           <mat-progress-bar *ngIf="reasonsLoading" mode="determinate" [value]="reasonsProgress" class="w-full mt-2 rounded-full"></mat-progress-bar>
           
-          <div *ngIf="reasonsResult" class="result-container fade-in mt-4 p-4 rounded-2xl w-full flex flex-col">
-            <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest text-center mb-2 mt-2">{{ 'TOP_DELAY_REASONS' | translate }}</h3>
-            <mat-list class="bg-transparent w-full">
-              <mat-list-item *ngFor="let reason of reasonsResult; let i = index">
-                <div matListItemAvatar class="flex items-center justify-center rounded-full bg-slate-400 dark:bg-slate-700 text-white font-bold h-10 w-10">
-                  {{ i + 1 }}
+          <div *ngIf="reasonsResult" class="result-container fade-in mt-4 p-6 rounded-2xl w-full flex flex-col">
+            <h3 class="text-sm font-bold opacity-70 uppercase tracking-widest text-center mb-4">{{ 'TOP_DELAY_REASONS' | translate }}</h3>
+            
+            <div class="w-full flex flex-col gap-3">
+              <div *ngFor="let item of reasonsResult" class="flex flex-col w-full">
+                <div class="flex justify-between items-end mb-1">
+                  <span class="text-base font-medium">{{ item.reason | translate }}</span>
+                  <span class="text-sm opacity-80">{{ item.percentage }}% ({{ item.count }})</span>
                 </div>
-                <span matListItemTitle class="font-medium text-base ml-2 whitespace-normal break-words">{{ reason | translate }}</span>
-              </mat-list-item>
-            </mat-list>
+                <div class="w-full bg-slate-300 dark:bg-slate-700 rounded-full h-2">
+                  <div class="bg-primary h-2 rounded-full" [style.width.%]="item.percentage > 1 ? item.percentage : 1" style="background-color: var(--mat-sys-primary, #3f51b5);"></div>
+                </div>
+              </div>
+            </div>
+
+            <mat-divider class="w-full my-4"></mat-divider>
+            
+            <div class="flex flex-col items-center text-center">
+              <h4 class="text-xs font-bold opacity-70 uppercase tracking-widest mb-2 flex items-center gap-1">
+                <mat-icon class="scale-75">thermostat</mat-icon> {{ 'WEATHER_INFO' | translate }}
+              </h4>
+              <p class="text-sm opacity-90" *ngIf="weatherData">
+                {{ 'TEMPERATURE' | translate }}: <span class="font-bold">{{ weatherData?.current?.temperature_2m }}°C</span> | 
+                {{ 'WIND_SPEED' | translate }}: <span class="font-bold">{{ weatherData?.current?.wind_speed_10m }} km/h</span>
+              </p>
+              <p class="text-xs opacity-60 mt-1">Based on local forecast impact</p>
+            </div>
           </div>
         </div>
       </mat-card-content>
@@ -81,8 +109,10 @@
                 matInput
                 [formControl]="myControl3"
                 [matAutocomplete]="autoState"
+                [title]="'STATE' | translate"
+                [placeholder]="'STATE' | translate"
               />
-              <mat-autocomplete #autoState="matAutocomplete">
+              <mat-autocomplete #autoState="matAutocomplete" (optionSelected)="startAverageStateDelay()">
                 @for (state of filteredOptions3 | async; track state) {
                   <mat-option [value]="state">{{ state }}</mat-option>
                 }

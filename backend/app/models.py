@@ -11,12 +11,9 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     reward_points = Column(Integer, default=0)
+    status = Column(String, default="Available")
 
     trains = relationship("Train", back_populates="uploader")
-    
-    @property
-    def status(self):
-        return "active" if self.is_active else "inactive"
 
 class Train(Base):
     __tablename__ = "trains"
@@ -45,3 +42,21 @@ class Train(Base):
     uploader_id = Column(Integer, ForeignKey("users.id"))
     
     uploader = relationship("User", back_populates="trains")
+
+class Dataset(Base):
+    __tablename__ = "datasets"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, index=True)
+    size = Column(Float)
+    uploader = Column(String, default="Admin")
+    timestamp = Column(String)
+    uploader_id = Column(Integer, ForeignKey("users.id"))
+
+class ExportHistory(Base):
+    __tablename__ = "export_history"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    action = Column(String)
+    timestamp = Column(String)

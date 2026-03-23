@@ -132,7 +132,7 @@
     <mat-card appearance="outlined">
       <div class="flex justify-between items-center px-4 pt-4">
         <mat-card-title>{{ 'EXPORTED_DATASETS' | translate }}</mat-card-title>
-        <button mat-raised-button color="primary" (click)="downloadCsv()">
+        <button mat-raised-button color="primary" (click)="downloadExportsZip()">
           <mat-icon>download</mat-icon> Download Current View
         </button>
       </div>
@@ -145,7 +145,7 @@
 
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let element">Downloaded CSV</td>
+            <td mat-cell *matCellDef="let element">{{ element.action || 'Exported Dataset' }}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="exportsColumns"></tr>

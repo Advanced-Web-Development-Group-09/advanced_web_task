@@ -8,6 +8,7 @@
   "CHANCE_OF_CANCELLATION": "Ausfallwahrscheinlichkeit",
   "BASED_ON_A_TOTAL_OF": "Basierend auf insgesamt",
   "RECORDED_TRAINS": "erfassten Zügen",
+  "EXPECTED_DELAY": "Erwartete Verspätung",
   
   "TOP_DELAY_REASONS": "Häufigste Verspätungsgründe",
   "WEATHER_CONDITIONS": "Wetterbedingungen",
@@ -15,6 +16,13 @@
   "STAFF_SHORTAGE": "Personalmangel",
   "TRACK_MAINTENANCE": "Gleisarbeiten",
   "TRAIN_DEFECT": "Zugdefekt",
+
+  "ALIEN_INVASION": "Alien-Invasion",
+  "DRAGON_ON_TRACKS": "Drache auf den Gleisen",
+  "MATRIX_GLITCH": "Fehler in der Matrix",
+  "WEATHER_INFO": "Wetterdaten",
+  "TEMPERATURE": "Temperatur",
+  "WIND_SPEED": "Windgeschwindigkeit",
 
   "AVERAGE_STATE_DELAY": "Durchschnittliche Verspätung pro Bundesland",
   "STATE": "Bundesland",

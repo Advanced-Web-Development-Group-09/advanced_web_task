@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -8,6 +9,13 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+try:
+    # Quick migration hack to ensure the new column exists without deleting the DB!
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE users ADD COLUMN status VARCHAR DEFAULT 'Available'"))
+except Exception:
+    pass
 
 Base = declarative_base()
 
