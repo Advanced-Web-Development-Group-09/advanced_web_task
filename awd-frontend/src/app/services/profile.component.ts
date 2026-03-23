@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { UserService, UserProfile } from '../services/user.service';
 
 @Component({
   selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   userProfile: UserProfile | null = null;

@@ -5,15 +5,27 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Profile } from './profile';
+import { ProfileService } from '../../services/profile/profile.service';
+import { of } from 'rxjs';
 
 describe('Profile', () => {
   let component: Profile;
   let fixture: ComponentFixture<Profile>;
+  let mockProfileService: any;
 
   beforeEach(async () => {
+    mockProfileService = {
+      getProfile: jasmine.createSpy('getProfile').and.returnValue(of({ username: 'testuser' }))
+    };
+
     await TestBed.configureTestingModule({
       imports: [Profile, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        { provide: ProfileService, useValue: mockProfileService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Profile);
@@ -21,7 +33,9 @@ describe('Profile', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create and load profile', () => {
     expect(component).toBeTruthy();
+    expect(mockProfileService.getProfile).toHaveBeenCalled();
+    expect(component.user).toEqual({ username: 'testuser' } as any);
   });
 });
