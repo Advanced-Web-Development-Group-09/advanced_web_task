@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, HttpResponse } from '@angular/common/http';
+import { provideHttpClient, HttpResponse, HttpEventType } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Datasets } from './datasets';
 import { TrainService } from './train.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('Datasets', () => {
   let component: Datasets;
@@ -67,12 +67,45 @@ describe('Datasets', () => {
     expect(mockTrainService.deleteUpload).toHaveBeenCalledWith('1');
   });
 
+  it('should handle drag leave', () => {
+    const event = new DragEvent('dragleave');
+    spyOn(event, 'preventDefault');
+    component.onDragLeave(event);
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(component.isDragging).toBeFalse();
+  });
+
   it('should handle drag events', () => {
     const event = new DragEvent('dragover');
     spyOn(event, 'preventDefault');
     component.onDragOver(event);
     expect(event.preventDefault).toHaveBeenCalled();
     expect(component.isDragging).toBeTrue();
+  });
+
+  it('should reject invalid file drops and selections', () => {
+    const dialogSpy = spyOn(component.dialog, 'open');
+    const validFile = new File([''], 'data.csv');
+    const invalidFile = new File([''], 'data.txt');
+
+    // Test invalid drop
+    component.onDrop({ preventDefault: () => {}, dataTransfer: { files: [invalidFile] } } as any);
+    expect(dialogSpy).toHaveBeenCalled();
+
+    // Test valid drop
+    component.onDrop({ preventDefault: () => {}, dataTransfer: { files: [validFile] } } as any);
+    expect(component.uploadedFiles.length).toBeGreaterThan(0);
+
+    // Test invalid selection
+    component.uploadedFiles = [];
+    component.onFileSelected({ target: { files: [invalidFile], value: '' } } as any);
+    expect(dialogSpy).toHaveBeenCalledTimes(2);
+    
+    // Test no file drop or uploading state skips
+    component.isUploading = true;
+    component.onDrop({ preventDefault: () => {}, dataTransfer: { files: [validFile] } } as any);
+    component.onFileSelected({ target: { files: [validFile] } } as any);
+    expect(component.uploadedFiles.length).toBe(0); // Ignored due to isUploading
   });
 
   it('should handle file selection and drop events', () => {
@@ -84,6 +117,14 @@ describe('Datasets', () => {
     expect(component.uploadedFiles.length).toBe(0);
   });
 
+  it('should resume polling on init if task_id exists', async () => {
+    localStorage.setItem('upload_task_id', 'task_resume');
+    component.ngOnInit();
+    expect(component.isUploading).toBeTrue();
+    await new Promise(resolve => setTimeout(resolve, 600));
+    expect(mockTrainService.getUploadStatus).toHaveBeenCalledWith('task_resume');
+  });
+
   it('should upload a file and poll status', async () => {
     spyOn(window, 'alert');
     const file = new File([''], 'data.csv');
@@ -91,5 +132,48 @@ describe('Datasets', () => {
     await new Promise(resolve => setTimeout(resolve, 600));
     expect(mockTrainService.uploadTrainData).toHaveBeenCalled();
     expect(mockTrainService.getUploadStatus).toHaveBeenCalledWith('task123');
+  });
+
+  it('should handle UploadProgress events', () => {
+    mockTrainService.uploadTrainData.and.returnValue(of({ type: HttpEventType.UploadProgress, loaded: 50, total: 100 }));
+    const file = new File([''], 'data.csv');
+    component.uploadFile(file);
+    expect(component.uploadProgress).toBe(50);
+  });
+
+  it('should confirm upload of a specific file', () => {
+    const file = new File([''], 'test.csv');
+    component.uploadedFiles = [file];
+    component.confirmUpload(file, 0);
+    expect(mockTrainService.uploadTrainData).toHaveBeenCalled();
+  });
+
+  it('should handle file upload failure', () => {
+    mockTrainService.uploadTrainData.and.returnValue(throwError(() => new Error('Upload failed')));
+    const file = new File([''], 'data.csv');
+    component.uploadFile(file);
+    expect(component.isUploading).toBeFalse();
+  });
+
+  it('should handle polling error', async () => {
+    mockTrainService.getUploadStatus.and.returnValue(throwError(() => new Error('Polling failed')));
+    const file = new File([''], 'data.csv');
+    component.uploadFile(file);
+    await new Promise(resolve => setTimeout(resolve, 600));
+    expect(component.isUploading).toBeFalse();
+  });
+
+  it('should handle load datasets and exports errors', () => {
+    mockTrainService.getUploadedDatasets.and.returnValue(throwError(() => new Error('Error')));
+    mockTrainService.getExports.and.returnValue(throwError(() => new Error('Error')));
+    component.loadDatasets();
+    component.loadExports();
+    expect(mockTrainService.getUploadedDatasets).toHaveBeenCalled();
+  });
+
+  it('should handle delete dataset error', () => {
+    mockTrainService.deleteUpload.and.returnValue(throwError(() => new Error('Error')));
+    component.deleteDataset('1');
+    expect(mockTrainService.deleteUpload).toHaveBeenCalledWith('1');
   });
 });

@@ -3,10 +3,10 @@
   <h2>My Profile</h2>
   
   <div class="profile-details">
-    <p><strong>Username:</strong> {{ userProfile?.username }}</p>
-    <p><strong>Email:</strong> {{ userProfile?.email }}</p>
-    <p><strong>Reward Points:</strong> {{ userProfile?.reward_points }}</p>
-    <p><strong>Current Status:</strong> {{ userProfile?.status }}</p>
+    <p><strong>Username:</strong> {{ userProfile.username }}</p>
+    <p><strong>Email:</strong> {{ userProfile.email }}</p>
+    <p><strong>Reward Points:</strong> {{ userProfile.reward_points }}</p>
+    <p><strong>Current Status:</strong> {{ userProfile.status }}</p>
   </div>
   
   <hr>
@@ -31,7 +31,7 @@
 
     <button 
       class="btn btn-primary" 
-      [disabled]="isUpdating || currentStatus === userProfile?.status" 
+      [disabled]="isUpdating || currentStatus === userProfile.status" 
       (click)="onUpdateStatus()">
       {{ isUpdating ? 'Updating...' : 'Update Status' }}
     </button>

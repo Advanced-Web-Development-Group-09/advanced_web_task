@@ -69,4 +69,24 @@ describe('Login', () => {
     component.toggleDarkMode();
     expect(component.isDarkMode).toBe('dark');
   });
+
+  it('should handle login error and clear invalid credentials', () => {
+    loginService.login.and.returnValue(throwError(() => ({ error: { detail: 'Incorrect login credentials' } })));
+    component.loginForm.controls.username.setValue('test');
+    component.loginForm.controls.password.setValue('wrong');
+    component.onLogin();
+    expect(component.loginForm.hasError('invalidCredentials')).toBeTrue();
+    
+    component.loginForm.controls.username.setValue('test2');
+    expect(component.loginForm.hasError('invalidCredentials')).toBeFalse();
+  });
+
+  it('should handle generic login error', () => {
+    loginService.login.and.returnValue(throwError(() => ({ error: { detail: 'Some other error' } })));
+    component.loginForm.controls.username.setValue('test');
+    component.loginForm.controls.password.setValue('wrong');
+    spyOn(console, 'error');
+    component.onLogin();
+    expect(console.error).toHaveBeenCalled();
+  });
 });

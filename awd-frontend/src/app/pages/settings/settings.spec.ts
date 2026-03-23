@@ -6,7 +6,7 @@ import { provideRouter, Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Settings } from './settings';
 import { UserService } from '../../services/user/user.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
 describe('Settings', () => {
@@ -60,5 +60,52 @@ describe('Settings', () => {
   it('should open delete dialog', () => {
     component.openDeleteDialog();
     expect(dialog.open).toHaveBeenCalled();
+  });
+
+  it('should validate password match', () => {
+    component.passwordForm.controls.newPassword.setValue('Password123');
+    component.passwordForm.controls.confirmPassword.setValue('Password321');
+    expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeTrue();
+
+    component.passwordForm.controls.confirmPassword.setValue('Password123');
+    expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeFalse();
+
+    // clear form values
+    component.passwordForm.controls.newPassword.setValue('');
+    expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeFalse();
+  });
+
+  it('should return null from validator if newPassword or confirmPassword are empty', () => {
+    component.passwordForm.controls.newPassword.setValue('');
+    component.passwordForm.controls.confirmPassword.setValue('');
+    expect(component.passwordForm.controls.confirmPassword.errors).toBeNull();
+  });
+
+  it('should preserve other errors when clearing passwordMismatch', () => {
+    component.passwordForm.controls.newPassword.setValue('Password123');
+    component.passwordForm.controls.confirmPassword.setValue('Password321');
+    component.passwordForm.controls.confirmPassword.setErrors({ passwordMismatch: true, required: true });
+
+    component.passwordForm.controls.confirmPassword.setValue('Password123');
+    expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeFalse();
+    expect(component.passwordForm.controls.confirmPassword.hasError('required')).toBeTrue();
+  });
+
+  it('should handle incorrect current password error', () => {
+    userService.changePassword.and.returnValue(throwError(() => ({ error: { detail: 'Incorrect current password' } })));
+    component.passwordForm.controls.currentPassword.setValue('wrong');
+    component.passwordForm.controls.newPassword.setValue('Password123');
+    component.passwordForm.controls.confirmPassword.setValue('Password123');
+    component.onChangePassword();
+    expect(component.passwordForm.controls.currentPassword.hasError('incorrect')).toBeTrue();
+  });
+
+  it('should handle generic password change error', () => {
+    userService.changePassword.and.returnValue(throwError(() => ({ error: { detail: 'Server error' } })));
+    component.passwordForm.controls.currentPassword.setValue('old');
+    component.passwordForm.controls.newPassword.setValue('Password123');
+    component.passwordForm.controls.confirmPassword.setValue('Password123');
+    component.onChangePassword();
+    expect(component.passwordForm.controls.currentPassword.hasError('incorrect')).toBeFalse();
   });
 });

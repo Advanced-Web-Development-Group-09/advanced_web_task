@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Registration } from './registration';
 import { RegisterService } from '../../services/register/register.service';
 import { LoginService } from '../../services/login/login.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('Registration', () => {
   let component: Registration;
@@ -73,5 +73,41 @@ describe('Registration', () => {
     component.isDarkMode = 'light';
     component.toggleDarkMode();
     expect(component.isDarkMode).toBe('dark');
+  });
+
+  it('should handle registration errors for taken username and email', () => {
+    registerService.register.and.returnValue(throwError(() => ({ error: { detail: 'Email already registered' } })));
+    component.registerForm.controls.username.setValue('test');
+    component.registerForm.controls.email.setValue('test@test.com');
+    component.registerForm.controls.password.setValue('Password123');
+    component.onSignUp();
+    expect(component.registerForm.controls.email.hasError('alreadyTaken')).toBeTrue();
+
+    component.registerForm.controls.email.setValue('test2@test.com');
+    expect(component.registerForm.controls.email.hasError('alreadyTaken')).toBeFalse();
+
+    registerService.register.and.returnValue(throwError(() => ({ error: { detail: 'Username already registered' } })));
+    component.onSignUp();
+    expect(component.registerForm.controls.username.hasError('alreadyTaken')).toBeTrue();
+  });
+
+  it('should handle generic registration error', () => {
+    registerService.register.and.returnValue(throwError(() => ({ error: { detail: 'Some other error' } })));
+    component.registerForm.controls.username.setValue('test');
+    component.registerForm.controls.email.setValue('test@test.com');
+    component.registerForm.controls.password.setValue('Password123');
+    spyOn(console, 'error');
+    component.onSignUp();
+    expect(console.error).toHaveBeenCalled();
+  });
+ 
+  it('should clear alreadyTaken error on value change', () => {
+    component.registerForm.controls.email.setErrors({ alreadyTaken: true });
+    component.registerForm.controls.email.setValue('new@test.com');
+    expect(component.registerForm.controls.email.hasError('alreadyTaken')).toBeFalse();
+
+    component.registerForm.controls.username.setErrors({ alreadyTaken: true });
+    component.registerForm.controls.username.setValue('newuser');
+    expect(component.registerForm.controls.username.hasError('alreadyTaken')).toBeFalse();
   });
 });

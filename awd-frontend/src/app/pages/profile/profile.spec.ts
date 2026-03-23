@@ -6,7 +6,7 @@ import { provideRouter } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Profile } from './profile';
 import { ProfileService } from '../../services/profile/profile.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('Profile', () => {
   let component: Profile;
@@ -37,5 +37,11 @@ describe('Profile', () => {
     expect(component).toBeTruthy();
     expect(mockProfileService.getProfile).toHaveBeenCalled();
     expect(component.user).toEqual({ username: 'testuser' } as any);
+  });
+
+  it('should handle error when fetching profile', () => {
+    mockProfileService.getProfile.and.returnValue(throwError(() => new Error('Error')));
+    component.ngOnInit();
+    expect(component.error).toBe('Failed to load profile');
   });
 });

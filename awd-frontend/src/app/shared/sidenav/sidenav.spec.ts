@@ -37,6 +37,14 @@ describe('Sidenav', () => {
     expect(translateService.use).toHaveBeenCalledWith('de');
   });
 
+  it('should toggle language from fallback', () => {
+    spyOn(translateService, 'getCurrentLang').and.returnValue('');
+    spyOn(translateService, 'getFallbackLang').and.returnValue('de');
+    spyOn(translateService, 'use');
+    component.toggleLanguage();
+    expect(translateService.use).toHaveBeenCalledWith('en');
+  });
+
   it('should toggle dark mode', () => {
     component.isDarkMode = 'light';
     component.toggleDarkMode();
