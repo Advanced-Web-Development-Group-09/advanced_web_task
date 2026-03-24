@@ -6,7 +6,7 @@ echo "🚀 Starting Advanced Web Task Demo for Mr. Holger..."
 echo "====================================================="
 
 # 1. Start the Python Backend
-echo "-> [1/4] Starting Python Backend in the background..."
+echo "-> [1/5] Starting Python Backend in the background..."
 FRONTEND_DIR=$(pwd)
 
 # Navigate to the backend directory (assuming it is a sibling folder)
@@ -23,20 +23,28 @@ fi
 python -m uvicorn main:app --host 127.0.0.1 --port 8000 &
 BACKEND_PID=$!
 
-echo "-> [2/4] Waiting 5 seconds for backend to initialize on port 8000..."
+echo "-> [2/5] Waiting 5 seconds for backend to initialize on port 8000..."
 sleep 5
 
 # 2. Start the Angular Frontend
 cd "$FRONTEND_DIR" || exit
-echo "-> [3/4] Starting Angular Frontend in the background..."
+echo "-> [3/5] Starting Angular Frontend in the background..."
 npx ng serve --host 0.0.0.0 --port 4200 &
 FRONTEND_PID=$!
 
 echo "-> Waiting 15 seconds for Angular to compile and start fully..."
 sleep 15
 
-# 3. Open Tests in a New Terminal
-echo "-> [4/4] Opening test coverage in a new terminal window..."
+# 3. Open Application in Mozilla Firefox
+echo "-> [4/5] Opening the application in Mozilla Firefox..."
+if command -v firefox &> /dev/null; then
+    firefox "http://localhost:4200" &
+else
+    xdg-open "http://localhost:4200" &
+fi
+
+# 4. Open Tests in a New Terminal
+echo "-> [5/5] Opening test coverage in a new terminal window..."
 if command -v gnome-terminal &> /dev/null; then
     gnome-terminal --title="Angular Tests & Coverage" -- bash -c "cd \"$FRONTEND_DIR\" && ./run-tests.sh; echo ''; echo '🏁 Tests complete! Press Enter to close this window...'; read"
 elif command -v xterm &> /dev/null; then
