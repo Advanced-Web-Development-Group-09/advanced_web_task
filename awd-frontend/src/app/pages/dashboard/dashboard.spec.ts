@@ -34,6 +34,10 @@ describe('Dashboard', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -81,11 +85,16 @@ describe('Dashboard', () => {
     spyOn(window.URL, 'createObjectURL').and.returnValue('blob:url');
     spyOn(window.URL, 'revokeObjectURL');
     
+    const mockAnchor = document.createElement('a');
+    spyOn(document, 'createElement').and.returnValue(mockAnchor);
+    spyOn(mockAnchor, 'click'); // Prevent actual browser navigation!
+    
     component.toggleAllRows();
     component.exportSelected();
     
     expect(trainService.exportSelectedTrains).toHaveBeenCalledWith(['1', '2']);
     expect(window.URL.createObjectURL).toHaveBeenCalled();
+    expect(mockAnchor.click).toHaveBeenCalled();
     expect(window.URL.revokeObjectURL).toHaveBeenCalled();
   });
 
@@ -128,6 +137,7 @@ describe('Dashboard', () => {
   });
 
   it('should move duplicate search to top', () => {
+    component.lastSearches = [];
     component.searchValue = 'search1';
     component.onSearch();
     component.searchValue = 'search2';
@@ -150,5 +160,17 @@ describe('Dashboard', () => {
     trainService.getTrains.and.returnValue(throwError(() => new Error('Error')));
     component.loadTrains(0, 10);
     expect(trainService.getTrains).toHaveBeenCalled();
+  });
+
+  it('should handle export error', () => {
+    trainService.exportSelectedTrains.and.returnValue(throwError(() => new Error('Error')));
+    component.toggleAllRows();
+    component.exportSelected();
+    expect(trainService.exportSelectedTrains).toHaveBeenCalled();
+  });
+
+  it('should return false for isAllSelected if no data', () => {
+    component.dataSource.data = [];
+    expect(component.isAllSelected()).toBeFalse();
   });
 });

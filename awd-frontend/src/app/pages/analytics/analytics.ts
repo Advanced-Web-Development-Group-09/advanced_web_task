@@ -12,11 +12,13 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import deTranslations from './de.json';
+import enTranslations from './en.json';
 
 @Component({
   selector: 'app-analytics',
@@ -36,7 +38,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatProgressBarModule,
     MatListModule,
     MatDividerModule,
-    TranslatePipe,
+    TranslateModule,
   ],
   templateUrl: './analytics.html',
   styleUrl: './analytics.css',
@@ -52,8 +54,21 @@ export class Analytics implements OnInit {
     'Wuppertal Hbf', 'Bielefeld Hbf', 'Bonn Hbf', 'Münster (Westf) Hbf', 'Karlsruhe Hbf', 
     'Mannheim Hbf', 'Augsburg Hbf', 'Wiesbaden Hbf', 'Gelsenkirchen Hbf', 'Braunschweig Hbf', 
     'Chemnitz Hbf', 'Kiel Hbf', 'Halle (Saale) Hbf', 'Magdeburg Hbf', 'Freiburg Hbf', 
-    'Lübeck Hbf', 'Erfurt Hbf', 'Mainz Hbf', 'Rostock Hbf', 'Kassel Hbf', 'Hildesheim Hbf', 
-    'Göttingen Hbf', 'Trier Hbf', 'Kaiserslautern Hbf', 'Koblenz Hbf'
+    'Lübeck Hbf', 'Erfurt Hbf', 'Mainz Hbf', 'Rostock Hbf', 'Kassel Hbf', 'Hildesheim Hbf',
+    'Göttingen Hbf', 'Trier Hbf', 'Kaiserslautern Hbf', 'Koblenz Hbf', 'Aachen Hbf', 
+    'Aschaffenburg Hbf', 'Bamberg', 'Bayreuth Hbf', 'Bocholt', 'Bremerhaven Hbf', 
+    'Cottbus Hbf', 'Darmstadt Hbf', 'Dessau Hbf', 'Düren', 'Erlangen', 'Flensburg', 
+    'Fulda', 'Fürth (Bay) Hbf', 'Gera Hbf', 'Gießen', 'Gütersloh Hbf', 'Hagen Hbf', 
+    'Hamm (Westf) Hbf', 'Hanau Hbf', 'Heidelberg Hbf', 'Heilbronn Hbf', 'Herne', 
+    'Homburg (Saar) Hbf', 'Ingolstadt Hbf', 'Jena Hbf', 'Kempten (Oberbay) Hbf', 
+    'Landshut (Bay) Hbf', 'Leverkusen Mitte', 'Ludwigsburg', 'Ludwigshafen (Rhein) Hbf', 
+    'Marburg (Lahn)', 'Minden (Westf)', 'Moers', 'Mönchengladbach Hbf', 'Mülheim (Ruhr) Hbf', 
+    'Neumünster', 'Neuss Hbf', 'Oberhausen Hbf', 'Offenbach (Main) Hbf', 'Oldenburg (Holst)', 
+    'Osnabrück Hbf', 'Paderborn Hbf', 'Pforzheim Hbf', 'Potsdam Hbf', 'Recklinghausen Hbf', 
+    'Regensburg Hbf', 'Remscheid Hbf', 'Reutlingen Hbf', 'Rheine', 'Saarbrücken Hbf', 
+    'Salzgitter-Lebenstedt', 'Schwerin Hbf', 'Siegen Hbf', 'Solingen Hbf', 'Stralsund Hbf', 
+    'Suhl', 'Tübingen Hbf', 'Ulm Hbf', 'Villingen (Schwarzw)', 'Weimar', 'Wetzlar', 
+    'Wolfsburg Hbf', 'Worms Hbf', 'Würzburg Hbf', 'Zwickau (Sachs) Hbf'
   ];
   optionsStates: string[] = [
     'Baden-Württemberg', 'Bayern', 'Berlin', 'Brandenburg', 'Bremen', 
@@ -78,7 +93,11 @@ export class Analytics implements OnInit {
   delayProgress = 0;
   delayResult: any = null;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private translate: TranslateService) {
+    // Manually inject your local JSON files into the translation service
+    this.translate.setTranslation('de', (deTranslations as any).default || deTranslations, true);
+    this.translate.setTranslation('en', (enTranslations as any).default || enTranslations, true);
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value || '')),
@@ -95,6 +114,31 @@ export class Analytics implements OnInit {
 
   ngOnInit(): void {
     this.fetchWeather();
+    this.fetchDatabaseStations();
+  }
+
+  fetchDatabaseStations(): void {
+    this.http.get<any>('http://127.0.0.1:8000/api/stations').subscribe({
+      next: (res) => {
+        let loadedStations: string[] = [];
+        if (Array.isArray(res)) {
+          loadedStations = res.map(s => typeof s === 'string' ? s : s.name || s.station);
+        } else if (res && Array.isArray(res.items)) {
+          loadedStations = res.items.map((s: any) => typeof s === 'string' ? s : s.name || s.station);
+        } else if (res && Array.isArray(res.stations)) {
+          loadedStations = res.stations.map((s: any) => typeof s === 'string' ? s : s.name || s.station);
+        }
+        
+        if (loadedStations.length > 0) {
+          this.options = Array.from(new Set([...this.options, ...loadedStations])); // Merge & unique
+          // Trigger autocomplete refresh
+          this.myControl.setValue(this.myControl.value);
+          this.myControl2.setValue(this.myControl2.value);
+          this.cdr.markForCheck();
+        }
+      },
+      error: (err) => console.warn('Could not fetch stations from database, using fallback list', err)
+    });
   }
 
   fetchWeather(): void {

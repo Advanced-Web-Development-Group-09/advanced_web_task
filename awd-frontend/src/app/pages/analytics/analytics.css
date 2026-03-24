@@ -35,15 +35,17 @@ form {
 }
 
 .result-container {
-  /* Standard MD3 elevation/tonal container fallback */
-  background-color: var(--mat-sys-secondary-container, #e2e8f0);
-  color: var(--mat-sys-on-secondary-container, #0f172a);
+  /* Soft blue background for responses */
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--mat-sys-on-surface, #0f172a);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   .result-container {
-    background-color: var(--mat-sys-secondary-container, #1e293b);
-    color: var(--mat-sys-on-secondary-container, #f8fafc);
+    background-color: rgba(59, 130, 246, 0.15);
+    color: var(--mat-sys-on-surface, #f8fafc);
+    border: 1px solid rgba(59, 130, 246, 0.4);
   }
 }

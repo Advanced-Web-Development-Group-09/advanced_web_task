@@ -2,53 +2,65 @@
   <mat-drawer mode="side" opened>
     <app-sidenav></app-sidenav>
   </mat-drawer>
+
   <mat-drawer-content>
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <div class="flex flex-row gap-2 items-center">
-          <div
-            class="flex items-center justify-center rounded-full text-4xl w-24 h-24"
-            style="
-              background-color: var(--mat-sys-surface-variant);
-              color: var(--mat-sys-on-surface-variant);
-            "
-          >
-            {{ user?.username?.charAt(0)?.toUpperCase() }}
+    <div class="p-6 h-full box-border">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+      @if (userProfile(); as profile) {
+          <div class="flex flex-row gap-6 items-center mb-8">
+            <div
+              class="flex items-center justify-center rounded-full text-4xl w-24 h-24"
+              style="
+                background-color: var(--mat-sys-surface-variant);
+                color: var(--mat-sys-on-surface-variant);
+              "
+            >
+              {{ profile.username.charAt(0).toUpperCase() }}
+            </div>
+            <div class="flex flex-col">
+              <p class="text-2xl font-medium m-0 pb-1" style="color: var(--mat-sys-on-surface)">
+                {{ profile.username }}
+              </p>
+              <p class="text-base m-0" style="color: var(--mat-sys-on-surface-variant)">
+                {{ profile.email }}
+              </p>
+            </div>
           </div>
-          <div class="flex flex-col">
-            <p class="text-xl font-medium" style="color: var(--mat-sys-on-surface)">
-              {{ user?.username }}
+
+          <div class="mb-6">
+            <p class="font-medium text-lg mb-2" style="color: var(--mat-sys-on-surface)">Status</p>
+            <mat-form-field appearance="outline" class="w-full max-w-2xl">
+              <textarea matInput [ngModel]="currentStatus()" (ngModelChange)="currentStatus.set($event)" rows="4" placeholder="Update your status here..."></textarea>
+            </mat-form-field>
+            <div class="flex items-center gap-4">
+              <button 
+                mat-flat-button 
+                color="primary"
+                [disabled]="isUpdating() || currentStatus() === profile.status" 
+                (click)="onUpdateStatus()">
+                <mat-icon>edit_note</mat-icon>
+                {{ isUpdating() ? 'Updating...' : 'Update Status' }}
+              </button>
+              @if (statusMessage()) {
+              <span [ngClass]="{'text-green-600': statusMessage() === 'Status updated successfully!', 'text-red-600': statusMessage() !== 'Status updated successfully!'}">
+                {{ statusMessage() }}
+              </span>
+              }
+            </div>
+          </div>
+
+          <div>
+            <p class="font-medium text-lg mb-1" style="color: var(--mat-sys-on-surface)">
+              {{ 'STATUSPOINTS' | translate }}
             </p>
-            <p style="color: var(--mat-sys-on-surface-variant)">
-              {{ user?.email }}
+            <p class="text-base" style="color: var(--mat-sys-on-surface-variant)">
+              {{ profile.reward_points }} {{ 'POINTS' | translate }}
             </p>
           </div>
-        </div>
-        <div>
-          <p class="font-medium" style="color: var(--mat-sys-on-surface)">Status</p>
-          <p style="color: var(--mat-sys-on-surface-variant)">
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-            sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-            aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-            rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-            amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-            tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos
-            et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-            sanctus est Lorem ipsum dolor sit amet.
-          </p>
-        </div>
-        <div>
-          <p class="font-medium" style="color: var(--mat-sys-on-surface)">
-            {{ 'STATUSPOINTS' | translate }}
-          </p>
-          <p style="color: var(--mat-sys-on-surface-variant)">
-            {{ user?.reward_points }} {{ 'POINTS' | translate }}
-          </p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+      }
+        </mat-card-content>
+      </mat-card>
+    </div>
   </mat-drawer-content>
 </mat-drawer-container>

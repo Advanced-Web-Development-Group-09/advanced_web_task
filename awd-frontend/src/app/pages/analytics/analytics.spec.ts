@@ -26,6 +26,7 @@ describe('Analytics', () => {
   afterEach(() => {
     // Clear any pending weather API requests safely to prevent "Expected one matching request" errors
     httpMock.match(req => req.url.includes('api.open-meteo.com')).forEach(req => req.flush({}));
+    httpMock.match(req => req.url.includes('api/stations')).forEach(req => req.flush([]));
     httpMock.verify();
   });
 
@@ -125,7 +126,9 @@ describe('Analytics', () => {
     statusReq.flush({ status: 'processing', progress_percentage: 50 });
     
     await new Promise(resolve => setTimeout(resolve, 600));
-    httpMock.expectOne('http://127.0.0.1:8000/api/analytics/status/task-process-1'); // verifies setTimeout triggered another poll
+    const nextReq = httpMock.expectOne('http://127.0.0.1:8000/api/analytics/status/task-process-1'); 
+    nextReq.flush({ status: 'failed' }); // MUST flush to prevent Karma crash!
+    expect(component.cancellationLoading).toBeFalse();
   });
 
   it('should poll again if status is processing (delay)', async () => {
@@ -141,6 +144,7 @@ describe('Analytics', () => {
     await new Promise(resolve => setTimeout(resolve, 600));
     const nextReq = httpMock.expectOne('http://127.0.0.1:8000/api/analytics/status/task-process-2'); 
     nextReq.flush({ status: 'completed', result: { average_delay_minutes: 15 } });
+    expect(component.delayResult).toBeTruthy();
   });
 
   it('should start average state delay', () => {
@@ -231,6 +235,7 @@ describe('Analytics', () => {
     await new Promise(resolve => setTimeout(resolve, 600));
     const nextReq = httpMock.expectOne('http://127.0.0.1:8000/api/analytics/status/task-process-3'); 
     nextReq.flush({ status: 'completed', result: [{ reason: 'weather', percentage: 50, count: 10 }] });
+    expect(component.reasonsResult).toBeTruthy();
   });
 
   it('should inject joke reason occasionally', () => {

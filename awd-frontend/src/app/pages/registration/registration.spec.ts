@@ -47,8 +47,10 @@ describe('Registration', () => {
   });
 
   it('should not sign up if form is invalid', () => {
+    spyOn(component.registerForm, 'markAllAsTouched');
     component.onSignUp();
     expect(registerService.register).not.toHaveBeenCalled();
+    expect(component.registerForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should sign up, login, and navigate on success', () => {
@@ -67,6 +69,15 @@ describe('Registration', () => {
     spyOn(translate, 'getCurrentLang').and.returnValue('en');
     component.toggleLanguage();
     expect(translate.use).toHaveBeenCalledWith('de');
+  });
+
+  it('should toggle language to en if no lang is set', () => {
+    const translate = TestBed.inject(TranslateService);
+    spyOn(translate, 'use');
+    spyOn(translate, 'getCurrentLang').and.returnValue(undefined as any);
+    spyOn(translate, 'getFallbackLang').and.returnValue(undefined as any);
+    component.toggleLanguage();
+    expect(translate.use).toHaveBeenCalledWith('en');
   });
 
   it('should toggle dark mode', () => {
@@ -100,7 +111,17 @@ describe('Registration', () => {
     component.onSignUp();
     expect(console.error).toHaveBeenCalled();
   });
- 
+
+  it('should handle registration error with no detail', () => {
+    registerService.register.and.returnValue(throwError(() => null));
+    component.registerForm.controls.username.setValue('test');
+    component.registerForm.controls.email.setValue('test@test.com');
+    component.registerForm.controls.password.setValue('Password123');
+    spyOn(console, 'error');
+    component.onSignUp();
+    expect(console.error).toHaveBeenCalled();
+  });
+
   it('should clear alreadyTaken error on value change', () => {
     component.registerForm.controls.email.setErrors({ alreadyTaken: true });
     component.registerForm.controls.email.setValue('new@test.com');

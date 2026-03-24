@@ -41,9 +41,11 @@ describe('Login', () => {
   });
 
   it('should not login if form is invalid', () => {
+    spyOn(component.loginForm, 'markAllAsTouched');
     component.loginForm.controls.username.setValue('');
     component.onLogin();
     expect(loginService.login).not.toHaveBeenCalled();
+    expect(component.loginForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should login, set token, and navigate', () => {
@@ -62,6 +64,15 @@ describe('Login', () => {
     spyOn(translate, 'getCurrentLang').and.returnValue('en');
     component.toggleLanguage();
     expect(translate.use).toHaveBeenCalledWith('de');
+  });
+
+  it('should toggle language to en if no lang is set', () => {
+    const translate = TestBed.inject(TranslateService);
+    spyOn(translate, 'use');
+    spyOn(translate, 'getCurrentLang').and.returnValue(undefined as any);
+    spyOn(translate, 'getFallbackLang').and.returnValue(undefined as any);
+    component.toggleLanguage();
+    expect(translate.use).toHaveBeenCalledWith('en');
   });
 
   it('should toggle dark mode', () => {
@@ -88,5 +99,20 @@ describe('Login', () => {
     spyOn(console, 'error');
     component.onLogin();
     expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should handle login error with no detail', () => {
+    loginService.login.and.returnValue(throwError(() => null));
+    component.loginForm.controls.username.setValue('test');
+    component.loginForm.controls.password.setValue('password');
+    spyOn(console, 'error');
+    component.onLogin();
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should clear invalidCredentials error on value change', () => {
+    component.loginForm.setErrors({ invalidCredentials: true });
+    component.loginForm.controls.username.setValue('newuser');
+    expect(component.loginForm.hasError('invalidCredentials')).toBeFalse();
   });
 });

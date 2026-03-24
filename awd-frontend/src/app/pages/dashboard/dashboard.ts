@@ -56,7 +56,7 @@ import { TrainService, Train } from '../../services/train/train.service';
 })
 export class Dashboard implements OnInit, AfterViewInit {
   // Table columns
-  readonly displayedColumns: string[] = ['select', 'id', 'station', 'plannedDeparture'];
+  readonly displayedColumns: string[] = ['select', 'id', 'station', 'departure_plan'];
   readonly columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
 
   // Data and state
@@ -82,9 +82,9 @@ export class Dashboard implements OnInit, AfterViewInit {
 
   // Initialize paginator and fetch trains
   ngAfterViewInit(): void {
-    this.loadTrains(0, this.paginator.pageSize || 10);
-
-    this.paginator.page.subscribe((event: PageEvent) => {
+    this.loadTrains(0, this.paginator?.pageSize || 10);
+    this.dataSource.sort = this.sort;
+    this.paginator?.page.subscribe((event: PageEvent) => {
       this.loadTrains(event.pageIndex, event.pageSize);
     });
   }
@@ -111,8 +111,10 @@ export class Dashboard implements OnInit, AfterViewInit {
 
     this.saveSearch(value);
 
-    this.paginator.firstPage();
-    this.loadTrains(0, this.paginator.pageSize || 10);
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
+    this.loadTrains(0, this.paginator?.pageSize || 10);
   }
 
   // Set search value from suggestion and search
@@ -125,7 +127,11 @@ export class Dashboard implements OnInit, AfterViewInit {
   private loadSearchHistory(): void {
     const stored = localStorage.getItem(this.STORAGE_KEY);
     if (stored) {
-      this.lastSearches = JSON.parse(stored);
+      try {
+        this.lastSearches = JSON.parse(stored);
+      } catch (e) {
+        this.lastSearches = [];
+      }
     }
   }
 
@@ -140,7 +146,9 @@ export class Dashboard implements OnInit, AfterViewInit {
 
   // Check if all rows are selected
   isAllSelected(): boolean {
-    return this.selection.selected.length === this.dataSource.data.length;
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows && numRows !== 0;
   }
 
   // Toggle all row selection
@@ -170,16 +178,19 @@ export class Dashboard implements OnInit, AfterViewInit {
   exportSelected(): void {
     const selectedIds = this.selection.selected.map((train) => train.id);
 
-    this.trainService.exportSelectedTrains(selectedIds).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
+    this.trainService.exportSelectedTrains(selectedIds).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
 
-      // adjust filename depending on backend
-      a.download = 'trains_export.csv';
+        // adjust filename depending on backend
+        a.download = 'trains_export.csv';
 
-      a.click();
-      window.URL.revokeObjectURL(url);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error('Export failed', err)
     });
   }
 }

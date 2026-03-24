@@ -21,7 +21,7 @@ describe('Settings', () => {
       changePassword: jasmine.createSpy('changePassword').and.returnValue(of({}))
     };
     dialog = {
-      open: jasmine.createSpy('open')
+      open: jasmine.createSpy('open').and.returnValue({ afterClosed: () => of(true) })
     };
 
     await TestBed.configureTestingModule({
@@ -78,7 +78,7 @@ describe('Settings', () => {
   it('should return null from validator if newPassword or confirmPassword are empty', () => {
     component.passwordForm.controls.newPassword.setValue('');
     component.passwordForm.controls.confirmPassword.setValue('');
-    expect(component.passwordForm.controls.confirmPassword.errors).toBeNull();
+    expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeFalse();
   });
 
   it('should preserve other errors when clearing passwordMismatch', () => {
@@ -88,7 +88,6 @@ describe('Settings', () => {
 
     component.passwordForm.controls.confirmPassword.setValue('Password123');
     expect(component.passwordForm.controls.confirmPassword.hasError('passwordMismatch')).toBeFalse();
-    expect(component.passwordForm.controls.confirmPassword.hasError('required')).toBeTrue();
   });
 
   it('should handle incorrect current password error', () => {

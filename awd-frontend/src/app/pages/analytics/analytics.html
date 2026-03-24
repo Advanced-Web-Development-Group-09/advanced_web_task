@@ -19,8 +19,8 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>{{ 'END_STATION' | translate }}</mat-label>
-              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" [title]="'END_STATION' | translate" [placeholder]="'END_STATION' | translate" />
-              <mat-autocomplete #auto="matAutocomplete">
+              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto2" [title]="'END_STATION' | translate" [placeholder]="'END_STATION' | translate" />
+              <mat-autocomplete #auto2="matAutocomplete">
                 @for (option of filteredOptions2 | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
                 }
@@ -91,7 +91,7 @@
                 {{ 'TEMPERATURE' | translate }}: <span class="font-bold">{{ weatherData?.current?.temperature_2m }}°C</span> | 
                 {{ 'WIND_SPEED' | translate }}: <span class="font-bold">{{ weatherData?.current?.wind_speed_10m }} km/h</span>
               </p>
-              <p class="text-xs opacity-60 mt-1">Based on local forecast impact</p>
+              <p class="text-xs opacity-60 mt-1">{{ 'BASED_ON_FORECAST' | translate }}</p>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@
                 [title]="'STATE' | translate"
                 [placeholder]="'STATE' | translate"
               />
-              <mat-autocomplete #autoState="matAutocomplete" (optionSelected)="startAverageStateDelay()">
+              <mat-autocomplete #autoState="matAutocomplete">
                 @for (state of filteredOptions3 | async; track state) {
                   <mat-option [value]="state">{{ state }}</mat-option>
                 }

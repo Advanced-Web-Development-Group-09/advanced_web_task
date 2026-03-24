@@ -1,0 +1,69 @@
+<mat-drawer-container class="h-screen" autosize>
+  <mat-drawer mode="side" opened>
+    <app-sidenav></app-sidenav>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="p-6 h-full box-border">
+@if (userProfile) {
+      <mat-card appearance="outlined" class="max-w-2xl mx-auto mt-8">
+        <mat-card-header>
+          <mat-card-title class="text-2xl mb-4 font-semibold">
+            My Profile
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center text-lg mb-2">
+              <mat-icon class="mr-2 text-yellow-500">stars</mat-icon>
+              <strong>Reward Points:&nbsp;</strong> {{ userProfile.reward_points }}
+            </div>
+          </div>
+          
+          <h3 class="text-xl mb-4 font-medium">Manage Profile</h3>
+          
+          <div class="flex flex-col gap-4">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Username</mat-label>
+              <input matInput [(ngModel)]="editUsername" placeholder="Enter username">
+              <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" [(ngModel)]="editEmail" placeholder="Enter email">
+              <mat-icon matSuffix>email</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Status</mat-label>
+              <textarea matInput [(ngModel)]="currentStatus" rows="4" placeholder="How are you feeling?"></textarea>
+              <mat-icon matSuffix>edit_note</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="mt-4 flex flex-col items-start gap-4">
+            <button 
+              mat-flat-button 
+              color="primary"
+              [disabled]="isUpdating || (currentStatus === userProfile.status && editUsername === userProfile.username && editEmail === userProfile.email)" 
+              (click)="onUpdateProfile()">
+              <mat-icon>save</mat-icon>
+              {{ isUpdating ? 'Updating...' : 'Update Profile' }}
+            </button>
+
+            @if (statusMessage) {
+            <p 
+               class="text-sm font-medium px-4 py-2 rounded"
+               [ngClass]="{'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100': statusMessage === 'Profile updated successfully!', 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100': statusMessage !== 'Profile updated successfully!'}">
+              {{ statusMessage }}
+            </p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+}
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

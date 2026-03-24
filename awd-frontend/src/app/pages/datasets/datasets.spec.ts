@@ -39,6 +39,8 @@ describe('Datasets', () => {
     fixture = TestBed.createComponent(Datasets);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    spyOn(window, 'alert').and.stub(); // Prevent hanging Karma runner
   });
 
   it('should create', () => {
@@ -49,17 +51,25 @@ describe('Datasets', () => {
     spyOn(window.URL, 'createObjectURL').and.returnValue('blob:url');
     spyOn(window.URL, 'revokeObjectURL');
     
+    const mockAnchor = document.createElement('a');
+    spyOn(document, 'createElement').and.returnValue(mockAnchor);
+    spyOn(mockAnchor, 'click'); // Prevent actual browser navigation!
+    
     component.downloadCsv();
     expect(mockTrainService.downloadCsv).toHaveBeenCalled();
+    expect(mockAnchor.click).toHaveBeenCalled();
 
     component.downloadJson();
     expect(mockTrainService.downloadJson).toHaveBeenCalled();
+    expect(mockAnchor.click).toHaveBeenCalledTimes(2);
 
     component.downloadExcel();
     expect(mockTrainService.downloadExcel).toHaveBeenCalled();
+    expect(mockAnchor.click).toHaveBeenCalledTimes(3);
 
     component.downloadExportsZip();
     expect(mockTrainService.downloadExportsZip).toHaveBeenCalled();
+    expect(mockAnchor.click).toHaveBeenCalledTimes(4);
   });
 
   it('should delete dataset', () => {
@@ -100,9 +110,29 @@ describe('Datasets', () => {
     component.uploadedFiles = [];
     component.onFileSelected({ target: { files: [invalidFile], value: '' } } as any);
     expect(dialogSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should ignore drops and selections without files', () => {
+    component.onDrop({ preventDefault: () => {}, dataTransfer: { files: [] } } as any);
+    expect(component.uploadedFiles.length).toBe(0);
+
+    component.onFileSelected({ target: { files: [] } } as any);
+    expect(component.uploadedFiles.length).toBe(0);
     
+    component.onFileSelected({ target: {} } as any);
+    expect(component.uploadedFiles.length).toBe(0);
+    
+    // Test null dataTransfer
+    component.onDrop({ preventDefault: () => {}, dataTransfer: null } as any);
+    expect(component.uploadedFiles.length).toBe(0);
+    
+    // Test null target files
+    component.onFileSelected({ target: { files: null } } as any);
+    expect(component.uploadedFiles.length).toBe(0);
+
     // Test no file drop or uploading state skips
     component.isUploading = true;
+    const validFile = new File([''], 'data.csv');
     component.onDrop({ preventDefault: () => {}, dataTransfer: { files: [validFile] } } as any);
     component.onFileSelected({ target: { files: [validFile] } } as any);
     expect(component.uploadedFiles.length).toBe(0); // Ignored due to isUploading
@@ -125,8 +155,13 @@ describe('Datasets', () => {
     expect(mockTrainService.getUploadStatus).toHaveBeenCalledWith('task_resume');
   });
 
+  it('should not resume polling on init if no task_id exists', () => {
+    localStorage.removeItem('upload_task_id');
+    component.ngOnInit();
+    expect(component.isUploading).toBeFalse();
+  });
+
   it('should upload a file and poll status', async () => {
-    spyOn(window, 'alert');
     const file = new File([''], 'data.csv');
     component.uploadFile(file);
     await new Promise(resolve => setTimeout(resolve, 600));
@@ -139,6 +174,13 @@ describe('Datasets', () => {
     const file = new File([''], 'data.csv');
     component.uploadFile(file);
     expect(component.uploadProgress).toBe(50);
+  });
+
+  it('should handle UploadProgress events without total size', () => {
+    mockTrainService.uploadTrainData.and.returnValue(of({ type: HttpEventType.UploadProgress, loaded: 50 }));
+    const file = new File([''], 'data.csv');
+    component.uploadFile(file);
+    expect(component.uploadProgress).toBe(100);
   });
 
   it('should confirm upload of a specific file', () => {
@@ -175,5 +217,20 @@ describe('Datasets', () => {
     mockTrainService.deleteUpload.and.returnValue(throwError(() => new Error('Error')));
     component.deleteDataset('1');
     expect(mockTrainService.deleteUpload).toHaveBeenCalledWith('1');
+  });
+
+  it('should handle download errors for all filetypes', () => {
+    spyOn(console, 'error');
+    mockTrainService.downloadCsv.and.returnValue(throwError(() => new Error('DL Error')));
+    mockTrainService.downloadJson.and.returnValue(throwError(() => new Error('DL Error')));
+    mockTrainService.downloadExcel.and.returnValue(throwError(() => new Error('DL Error')));
+    mockTrainService.downloadExportsZip.and.returnValue(throwError(() => new Error('DL Error')));
+
+    component.downloadCsv();
+    component.downloadJson();
+    component.downloadExcel();
+    component.downloadExportsZip();
+    
+    expect(console.error).toHaveBeenCalledTimes(4);
   });
 });
