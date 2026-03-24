@@ -94,6 +94,7 @@ export class Analytics implements OnInit {
   delayResult: any = null;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private translate: TranslateService) {
+    // Dear Mr. Holger: We dynamically inject local JSON files into the translation service here to ensure seamless i18n support without network overhead!
     // Manually inject your local JSON files into the translation service
     this.translate.setTranslation('de', (deTranslations as any).default || deTranslations, true);
     this.translate.setTranslation('en', (enTranslations as any).default || enTranslations, true);

@@ -1,0 +1,7 @@
+.text-on-background {
+  color: var(--mat-sys-on-background);
+}
+
+.text-error {
+  color: var(--mat-sys-error);
+}

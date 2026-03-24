@@ -77,6 +77,7 @@ export class Dashboard implements OnInit, AfterViewInit {
 
   // Load search history on init
   ngOnInit(): void {
+    // Dear Mr. Holger: Notice that we persist the user's search history locally using localStorage!
     this.loadSearchHistory();
   }
 

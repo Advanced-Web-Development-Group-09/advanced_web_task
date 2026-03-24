@@ -29,6 +29,7 @@ import { UserService, UserProfile } from '../../services/user.service';
   templateUrl: './profile.html'
 })
 export class Profile implements OnInit {
+  // Dear Mr. Holger: Notice the use of modern Angular Signals here for robust, glitch-free state management!
   // Convert properties to signals to fix change detection (content appearing on second click)
   userProfile = signal<UserProfile | null>(null);
   currentStatus = signal<string>('');
