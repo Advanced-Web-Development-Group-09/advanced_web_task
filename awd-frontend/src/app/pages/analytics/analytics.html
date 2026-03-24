@@ -10,7 +10,7 @@
           <form class="flex flex-col gap-2 w-full">
             <mat-form-field>
               <mat-label>{{ 'START_STATION' | translate }}</mat-label>
-              <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [title]="'START_STATION' | translate" [placeholder]="'START_STATION' | translate" />
+              <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" [title]="'START_STATION' | translate" [placeholder]="'START_STATION' | translate" [attr.aria-label]="'START_STATION' | translate" />
               <mat-autocomplete #auto="matAutocomplete">
                 @for (option of filteredOptions | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
@@ -19,8 +19,8 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>{{ 'END_STATION' | translate }}</mat-label>
-              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto" [title]="'END_STATION' | translate" [placeholder]="'END_STATION' | translate" />
-              <mat-autocomplete #auto="matAutocomplete">
+              <input type="text" matInput [formControl]="myControl2" [matAutocomplete]="auto2" [title]="'END_STATION' | translate" [placeholder]="'END_STATION' | translate" [attr.aria-label]="'END_STATION' | translate" />
+              <mat-autocomplete #auto2="matAutocomplete">
                 @for (option of filteredOptions2 | async; track option) {
                   <mat-option [value]="option">{{ option }}</mat-option>
                 }
@@ -76,7 +76,7 @@
                   <span class="text-sm opacity-80">{{ item.percentage }}% ({{ item.count }})</span>
                 </div>
                 <div class="w-full bg-slate-300 dark:bg-slate-700 rounded-full h-2">
-                  <div class="bg-primary h-2 rounded-full" [style.width.%]="item.percentage > 1 ? item.percentage : 1" style="background-color: var(--mat-sys-primary, #3f51b5);"></div>
+                  <div class="bg-primary h-2 rounded-full custom-progress-bar" [style.width.%]="item.percentage > 1 ? item.percentage : 1"></div>
                 </div>
               </div>
             </div>
@@ -91,7 +91,6 @@
                 {{ 'TEMPERATURE' | translate }}: <span class="font-bold">{{ weatherData?.current?.temperature_2m }}°C</span> | 
                 {{ 'WIND_SPEED' | translate }}: <span class="font-bold">{{ weatherData?.current?.wind_speed_10m }} km/h</span>
               </p>
-              <p class="text-xs opacity-60 mt-1">Based on local forecast impact</p>
               <p class="text-xs opacity-60 mt-1">{{ 'BASED_ON_FORECAST' | translate }}</p>
             </div>
           </div>
@@ -112,6 +111,7 @@
                 [matAutocomplete]="autoState"
                 [title]="'STATE' | translate"
                 [placeholder]="'STATE' | translate"
+                [attr.aria-label]="'STATE' | translate"
               />
               <mat-autocomplete #autoState="matAutocomplete">
                 @for (state of filteredOptions3 | async; track state) {
