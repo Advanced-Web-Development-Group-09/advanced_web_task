@@ -20,7 +20,7 @@ elif [ -d "venv" ]; then
 fi
 
 # Start the backend (FastAPI/uvicorn on port 8000)
-python -m uvicorn main:app --host 127.0.0.1 --port 8000 &
+python3 -m uvicorn main:app --host 127.0.0.1 --port 8000 &
 BACKEND_PID=$!
 
 echo "-> [2/5] Waiting 5 seconds for backend to initialize on port 8000..."
