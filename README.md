@@ -18,7 +18,7 @@ Welcome to our Advanced Web Development (AWD) final project submission. This `RE
 
 ## How to Run the Application
 
-To make reviewing as easy as possible, we have set up an automated script on the homescreen of the provided VirtualBox VM. VM password - 1111. A simple pin. Link to the VM- https://drive.google.com/file/d/1omxiVR-UvXC6d3qqbhcVj5tvk9kpniha/view?usp=sharing
+To make reviewing as easy as possible, we have set up an automated script on the homescreen of the provided VirtualBox VM. VM password - 1111. A simple pin. Link to the VM- https://drive.google.com/drive/folders/1dlhX6h6jW1EGFVI7gO8kI6qz4LeOwpTt?usp=sharing
 
 **Automated Execution via Homescreen Script:**
 1. Double-click the launch script located directly on the **Desktop/Homescreen**.
